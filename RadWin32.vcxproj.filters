@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Rad\GUI\MessageLoop.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rad\GUI\Window.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rad\WinError.cpp" />
+    <ClCompile Include="Rad\GUI\RegClass.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Rad\tstring.h" />
+    <ClInclude Include="Rad\GUI\MessageLoop.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\DevContext.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\WindowProxy.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\Window.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\WindowListener.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\WinError.h" />
+    <ClInclude Include="Rad\GUI\RegClass.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{3670dcae-eb61-4871-b13d-94819ab77c99}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
