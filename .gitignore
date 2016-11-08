@@ -1,0 +1,5 @@
+*.VC.db
+Bin/*
+Int/*
+Samples/*/Int/*
+.vs/*
