@@ -1,4 +1,5 @@
 *.VC.db
+*.VC.opendb
 Bin/*
 Int/*
 Samples/*/Int/*

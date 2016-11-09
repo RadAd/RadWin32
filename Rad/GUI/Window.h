@@ -10,6 +10,7 @@ namespace rad
 {
     class DevContext;
     class CPaintDC;
+    class WindowCreate;
     class WindowListener;
 
     class Window : public WindowProxy
@@ -27,14 +28,8 @@ namespace rad
         };
 
     protected:
-        Window(WNDPROC DefWndProc = DefWindowProc)
-            : m_DefWndProc(DefWndProc)
-        {
-            assert(m_DefWndProc != nullptr);
-        }
-        ~Window()
-        {
-        }
+        Window(const WindowCreate& wc, WNDPROC DefWndProc = DefWindowProc);
+        Window(HINSTANCE hInstance, LPCTSTR WindowName, WNDPROC DefWndProc = DefWindowProc);
 
     protected:
         UINT GetLastMessage() const { return m_LastMessage; }
@@ -121,9 +116,6 @@ namespace rad
         WNDPROC m_DefWndProc;
 
     public:    // static
-        static HWND Create(Window* WindowHandler, LPCTSTR ClassName, LPCTSTR WindowName, DWORD Style, DWORD ExStyle,
-            int x, int y, int Width, int Height,
-            HWND hParent, HMENU hMenu, HINSTANCE hInstance);
         static Window* FromHWND(HWND hWnd);
         void AttachMap(HWND hWnd);
         void DetachMap();

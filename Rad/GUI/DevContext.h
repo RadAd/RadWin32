@@ -5,7 +5,7 @@
 
 namespace rad
 {
-    class CGDIObject;        // see "GdiObject.H"
+    class GDIObject;        // see "GdiObject.H"
 
     class DevContext
     {
@@ -119,14 +119,14 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void DrawTextA(const char* String, int Count, LPRECT Rect, UINT Format)
+        void DrawTextA(LPCSTR String, int Count, LPRECT Rect, UINT Format)
         {
             assert(IsValid());
             if (::DrawTextA(m_hDC, String, Count, Rect, Format) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void DrawTextW(const wchar_t* String, int Count, LPRECT Rect, UINT Format)
+        void DrawTextW(LPCWSTR String, int Count, LPRECT Rect, UINT Format)
         {
             assert(IsValid());
             if (::DrawTextW(m_hDC, String, Count, Rect, Format) == 0)
@@ -148,7 +148,7 @@ namespace rad
             return Color;
         }
 
-        void GetTextMetrics(TEXTMETRIC* TM) const
+        void GetTextMetrics(LPTEXTMETRIC TM) const
         {
             if (::GetTextMetrics(GetHandle(), TM) == 0)
                 ThrowWinError(_T(__FUNCTION__));
@@ -174,14 +174,14 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void Polygon(const POINT* points, int count)
+        void Polygon(const LPPOINT points, int count)
         {
             if (count > 0)
                 if (::Polygon(GetHandle(), points, count) == 0)
                     ThrowWinError(_T(__FUNCTION__));
         }
 
-        void Polyline(const POINT* points, int count)
+        void Polyline(const LPPOINT points, int count)
         {
             if (count > 0)
                 if (::Polyline(GetHandle(), points, count) == 0)
@@ -194,14 +194,14 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void PlayEnhMetaFile(HENHMETAFILE hEmf, const RECT* Rect)
+        void PlayEnhMetaFile(HENHMETAFILE hEmf, const LPRECT Rect)
         {
             assert(IsValid());
             if (::PlayEnhMetaFile(m_hDC, hEmf, Rect) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void DevContext::SelectObject(const CGDIObject* GDIObj, CGDIObject* OldGDIObj = nullptr);    // see "GdiObject.H"
+        void DevContext::SelectObject(const GDIObject* GDIObj, GDIObject* OldGDIObj = nullptr);    // see "GdiObject.H"
     /*
         HGDIOBJ SelectObject(HGDIOBJ hGDIObj)
         {
@@ -344,7 +344,7 @@ namespace rad
         {
         }
 
-        CMemDC(DevContext* OtherDevContext)
+        CMemDC(DevContext& OtherDevContext)
         {
             Create(OtherDevContext);
         }
@@ -354,9 +354,9 @@ namespace rad
             Delete();
         }
 
-        void Create(DevContext* OtherDevContext)
+        void Create(DevContext& OtherDevContext)
         {
-            Attach(::CreateCompatibleDC(OtherDevContext->GetHandle()));
+            Attach(::CreateCompatibleDC(OtherDevContext.GetHandle()));
             if (!IsValid())
                 ThrowWinError(_T(__FUNCTION__));
         }

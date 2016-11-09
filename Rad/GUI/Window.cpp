@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "DevContext.H"
+#include "WindowCreate.h"
 #include "WindowListener.h"
 //#include "..\..\Logging.H"
 
@@ -81,22 +82,19 @@ namespace rad
         return RetVal;
     }
 
-    HWND Window::Create(Window* WindowHandler, LPCTSTR ClassName, LPCTSTR WindowName, DWORD Style, DWORD ExStyle, int x, int y, int Width, int Height, HWND hParent, HMENU hMenu, HINSTANCE hInstance)
+    Window::Window(const WindowCreate& wc, WNDPROC DefWndProc)
+        : m_DefWndProc(DefWndProc)
     {
-        HWND hWnd = CreateWindowEx(ExStyle,
-            ClassName,
-            WindowName,
-            Style,
-            x, y,
-            Width, Height,
-            hParent, hMenu,
-            hInstance,
-            (LPVOID) WindowHandler);
+        assert(m_DefWndProc != nullptr);
+        wc.Create((LPVOID) this);
+    }
 
-        if (hWnd == NULL)
-            ThrowWinError(_T(__FUNCTION__));
-
-        return hWnd;
+    Window::Window(HINSTANCE hInstance, LPCTSTR WindowName, WNDPROC DefWndProc)
+        : m_DefWndProc(DefWndProc)
+    {
+        assert(m_DefWndProc != nullptr);
+        WindowCreate wc(hInstance, WindowName);
+        wc.Create((LPVOID) this);
     }
 
     Window* Window::FromHWND(HWND hWnd)

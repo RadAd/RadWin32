@@ -33,6 +33,12 @@
     <ClInclude Include="Rad\GUI\RegClass.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Rad\GUI\GdiObject.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\WindowCreate.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">

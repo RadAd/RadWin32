@@ -1,8 +1,12 @@
 #include "RegClass.h"
 
+#include "..\WinError.h"
+
 namespace rad
 {
-    RegClass::RegClass(HINSTANCE _hInstance, LPCTSTR _ClassName)
+    LRESULT CALLBACK WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);  // See "Window.cpp"
+
+    RegClass::RegClass(HINSTANCE _hInstance, LPCTSTR ClassName)
     {
         ZeroMemory(this, sizeof(WNDCLASSEX));
         cbSize = sizeof(WNDCLASSEX);
@@ -10,7 +14,7 @@ namespace rad
         hInstance = _hInstance;
         hCursor = LoadCursor(NULL, IDC_ARROW);
         hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
-        lpszClassName = _ClassName;
+        lpszClassName = ClassName;
         style = CS_HREDRAW | CS_VREDRAW;
     }
 

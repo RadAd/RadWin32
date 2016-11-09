@@ -8,6 +8,11 @@ using namespace rad;
 class WindowHelloWorld : public Window
 {
 public:
+    WindowHelloWorld(HINSTANCE hInstance, LPCTSTR WindowName)
+        : Window(hInstance, WindowName)
+    {
+    }
+
     virtual LRESULT OnPaint(CPaintDC &DC)
     {
         RECT r;
@@ -25,7 +30,7 @@ int CALLBACK WinMain(
     _In_ int       nCmdShow
 )
 {
-    WindowHelloWorld* hw = WindowCreate<WindowHelloWorld>(hInstance, _T("Hello World")).Create();
+    WindowHelloWorld* hw = new WindowHelloWorld(hInstance, _T("Hello World"));
     hw->ShowWindow(nCmdShow);
 
     return (int) DoMessageLoop();

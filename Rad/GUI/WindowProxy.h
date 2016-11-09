@@ -93,7 +93,7 @@ namespace rad
             return ::PostMessage(m_hWnd, Message, wParam, lParam);
         }
 
-        void InvalidateRect(const RECT* pRect = nullptr, bool Erase = true)
+        void InvalidateRect(const LPRECT pRect = nullptr, bool Erase = true)
         {
             assert(IsWindow());
             if (::InvalidateRect(m_hWnd, pRect, Erase) == 0)
@@ -242,7 +242,7 @@ namespace rad
             return ::GetWindowLong(m_hWnd, Index);
         }
 
-        void GetWindowPlacement(WINDOWPLACEMENT* WindowPlacement) const
+        void GetWindowPlacement(LPWINDOWPLACEMENT WindowPlacement) const
         {
             assert(IsWindow());
             if (::GetWindowPlacement(m_hWnd, WindowPlacement) == 0)
@@ -357,7 +357,7 @@ namespace rad
             return ID;
         }
 
-        void SetWindowPlacement(const WINDOWPLACEMENT* WindowPlacement)
+        void SetWindowPlacement(const LPWINDOWPLACEMENT WindowPlacement)
         {
             assert(IsWindow());
             if (::SetWindowPlacement(m_hWnd, WindowPlacement) == 0)
@@ -499,7 +499,7 @@ namespace rad
             return WindowProxy(hWnd);
         }
 
-        UINT GetDlgItemTextA(int DlgItemID, char* String, int MaxLength)
+        UINT GetDlgItemTextA(int DlgItemID, LPSTR String, int MaxLength)
         {
             assert(IsWindow());
             UINT    Copied = ::GetDlgItemTextA(m_hWnd, DlgItemID, String, MaxLength);
@@ -512,7 +512,7 @@ namespace rad
             return Copied;
         }
 
-        UINT GetDlgItemTextW(int DlgItemID, wchar_t* String, int MaxLength)
+        UINT GetDlgItemTextW(int DlgItemID, LPWSTR String, int MaxLength)
         {
             assert(IsWindow());
             UINT    Copied = ::GetDlgItemTextW(m_hWnd, DlgItemID, String, MaxLength);
@@ -525,14 +525,14 @@ namespace rad
             return Copied;
         }
 
-        void SetDlgItemTextA(int DlgItemID, const char* String)
+        void SetDlgItemTextA(int DlgItemID, LPCSTR String)
         {
             assert(IsWindow());
             if (::SetDlgItemTextA(m_hWnd, DlgItemID, String) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void SetDlgItemTextW(int DlgItemID, const wchar_t* String)
+        void SetDlgItemTextW(int DlgItemID, LPCWSTR String)
         {
             assert(IsWindow());
             if (::SetDlgItemTextW(m_hWnd, DlgItemID, String) == 0)
