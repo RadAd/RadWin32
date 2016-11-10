@@ -1,16 +1,11 @@
 #ifndef __DLGHANDLER_H__
 #define __DLGHANDLER_H__
 
-#pragma warning(disable : 4786)
-
-#include "WindowProxy.H"
-#include "WindowListener.H"
-#include <map>
-#include <vector>
+#include "WindowMap.H"
 
 namespace rad
 {
-    class Dialog : public WindowProxy
+    class Dialog : public WindowMap
     {
     public:
         Dialog()
@@ -22,7 +17,7 @@ namespace rad
         INT_PTR DoModal(HINSTANCE hInstance, LPCTSTR Template, HWND hParent);
         INT_PTR DoModal(HINSTANCE hInstance, int TemplateID, HWND hParent);
 
-    public:
+    protected:
         void EndDialog(int Result)
         {
             assert(IsWindow());
@@ -31,27 +26,7 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-    public:
-        void AddWindowListener(WindowListener* WndListener)
-        {
-            m_WindowListeners.push_back(WndListener);
-        }
-
-        void RemoveWindowListener(WindowListener* WndListener);
-
-    private:
-        typedef	std::vector<WindowListener*>	WindowListenersContT;
-        WindowListenersContT	m_WindowListeners;
-
     protected:
-        void SetLastMessage(UINT Message, WPARAM wParam, LPARAM lParam)
-        {
-            m_LastMessage = Message;
-            m_LastwParam = wParam;
-            m_LastlParam = lParam;
-        }
-
-    public:
         virtual BOOL OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
         virtual BOOL OnInitDialog(HWND FocusControl);
         virtual BOOL OnCommand(WORD NotifyCode, WORD ID, HWND hWnd);
@@ -62,20 +37,8 @@ namespace rad
         virtual BOOL OnCancel();
 
     private:
+        static INT_PTR CALLBACK DlgHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
         bool    m_IsModal = false;
-        UINT    m_LastMessage = 0;
-        WPARAM  m_LastwParam = 0;
-        LPARAM  m_LastlParam = 0;
-
-    public:	// static
-        static Dialog* FromhWnd(HWND hWnd);
-        void AttachMap(HWND hWnd);
-        void DetachMap();
-
-    private:
-        typedef	std::map<HWND, Dialog*> hWndMapT;
-        static hWndMapT     s_hWndMap;
-        static int          s_ExitCode;
     };
 }
 

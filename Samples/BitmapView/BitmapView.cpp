@@ -28,8 +28,8 @@ void DrawBitmapCentered(DevContext& DC, const Bitmap& bmp, POINT p, DWORD Raster
 class WindowBitmapView : public Window
 {
 public:
-    WindowBitmapView(HINSTANCE hInstance, LPCTSTR WindowName)
-        : Window(hInstance, WindowName)
+    WindowBitmapView(HINSTANCE hInstance)
+        : Window(hInstance, _T("Bitmap View"))
     {
         m_logo.Load(hInstance, IDB_WINLOGO);
     }
@@ -54,7 +54,7 @@ int CALLBACK WinMain(
     _In_ int       nCmdShow
 )
 {
-    WindowBitmapView* bv = new WindowBitmapView(hInstance, _T("Bitmap View"));
+    WindowBitmapView* bv = new WindowBitmapView(hInstance);
     bv->ShowWindow(nCmdShow);
 
     return (int) DoMessageLoop();

@@ -1,19 +1,16 @@
 #ifndef __WindowHANDLER_H__
 #define __WindowHANDLER_H__
 
-#include "WindowProxy.H"
-
-#include <map>
-#include <vector>
+#include "WindowMap.H"
 
 namespace rad
 {
     class DevContext;
     class PaintDC;
+    class RegClass;
     class WindowCreate;
-    class WindowListener;
 
-    class Window : public WindowProxy
+    class Window : public WindowMap
     {
     public:
         struct KeyInfoT
@@ -32,23 +29,6 @@ namespace rad
         Window(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL, WNDPROC DefWndProc = DefWindowProc);
 
     protected:
-        UINT GetLastMessage() const { return m_LastMessage; }
-        WPARAM GetLastwParam() const { return m_LastwParam; }
-        LPARAM GetLastlParam() const { return m_LastlParam; }
-
-    public:
-        void AddWindowListener(WindowListener* pWindowListener)
-        {
-            m_WindowListeners.push_back(pWindowListener);
-        }
-
-        void RemoveWindowListener(WindowListener* pWindowListener);
-
-    private:
-        typedef std::vector<WindowListener*> WindowListenersContT;
-        WindowListenersContT    m_WindowListeners;
-
-    public:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
         virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct);
         virtual LRESULT OnPaint(PaintDC& DC);
@@ -103,27 +83,9 @@ namespace rad
         LRESULT DoDefault();
 
     private:
-        void SetLastMessage(UINT Message, WPARAM wParam, LPARAM lParam)
-        {
-            m_LastMessage = Message;
-            m_LastwParam = wParam;
-            m_LastlParam = lParam;
-        }
-
-        UINT    m_LastMessage = 0;
-        WPARAM  m_LastwParam = 0;
-        LPARAM  m_LastlParam = 0;
+        friend RegClass;
+        static LRESULT CALLBACK WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
         WNDPROC m_DefWndProc;
-
-    public:    // static
-        static Window* FromHWND(HWND hWnd);
-        void AttachMap(HWND hWnd);
-        void DetachMap();
-
-    private:
-        typedef std::map<HWND, Window*> HWNDMapT;
-        static HWNDMapT     s_HWNDMap;
-        static int          s_ExitCode;
     };
 }
 

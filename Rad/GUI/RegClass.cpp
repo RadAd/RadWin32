@@ -1,16 +1,15 @@
 #include "RegClass.h"
 
+#include "Window.h"
 #include "..\WinError.h"
 
 namespace rad
 {
-    LRESULT CALLBACK WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);  // See "Window.cpp"
-
     RegClass::RegClass(HINSTANCE _hInstance, LPCTSTR ClassName)
     {
         ZeroMemory(this, sizeof(WNDCLASSEX));
         cbSize = sizeof(WNDCLASSEX);
-        lpfnWndProc = WndHandlerWindowProc;
+        lpfnWndProc = Window::WndHandlerWindowProc;
         hInstance = _hInstance;
         hCursor = LoadCursor(NULL, IDC_ARROW);
         hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);

@@ -8,8 +8,8 @@ using namespace rad;
 class WindowHelloWorld : public Window
 {
 public:
-    WindowHelloWorld(HINSTANCE hInstance, LPCTSTR WindowName)
-        : Window(hInstance, WindowName)
+    WindowHelloWorld(HINSTANCE hInstance)
+        : Window(hInstance, _T("Hello World"))
     {
     }
 
@@ -30,7 +30,7 @@ int CALLBACK WinMain(
     _In_ int       nCmdShow
 )
 {
-    WindowHelloWorld* hw = new WindowHelloWorld(hInstance, _T("Hello World"));
+    WindowHelloWorld* hw = new WindowHelloWorld(hInstance);
     hw->ShowWindow(nCmdShow);
 
     return (int) DoMessageLoop();

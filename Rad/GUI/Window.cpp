@@ -9,13 +9,9 @@
 
 namespace rad
 {
-    const HWND WindowProxy::Invalid = NULL;
     const HDC DevContext::Invalid = NULL;
 
-    Window::HWNDMapT Window::s_HWNDMap;
-    int Window::s_ExitCode = 0;
-
-    LRESULT CALLBACK WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    LRESULT CALLBACK Window::WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         static int depth = 0;
         LRESULT RetVal = 0;
@@ -26,7 +22,7 @@ namespace rad
             //LogString("WndHandlerWindowProc: ");
             //LogMessage(hWnd, uMsg, wParam, lParam);
 
-            Window* WindowHandler = Window::FromHWND(hWnd);
+            Window* WindowHandler = dynamic_cast<Window*>(FromHWND(hWnd));
 
             if (uMsg == WM_NCCREATE)
             {
@@ -39,10 +35,10 @@ namespace rad
             {
                 RetVal = WindowHandler->OnMessage(uMsg, wParam, lParam);
 
-                if (!IsWindow(hWnd) && depth <= 1)
+                if (!::IsWindow(hWnd) && depth <= 1)
                 {
                     WindowHandler->DetachMap();
-                    //delete WindowHandler;
+                    delete WindowHandler;
                 }
             }
             else
@@ -67,13 +63,13 @@ namespace rad
         catch (const WinError& e)
         {
             TCHAR    Text[1024];
-            GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
+            ::GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
             MessageBox(hWnd, e.GetString().c_str(), Text, MB_OK | MB_ICONSTOP);
         }
         catch (...)
         {
             TCHAR    Text[1024];
-            GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
+            ::GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
             MessageBox(hWnd, _T("Unknown Exception. Caught in ") _T(__FUNCTION__), Text, MB_OK | MB_ICONSTOP);
         }
         --depth;
@@ -96,30 +92,6 @@ namespace rad
         wc.Create((LPVOID) this);
     }
 
-    Window* Window::FromHWND(HWND hWnd)
-    {
-        HWNDMapT::const_iterator    it = s_HWNDMap.find(hWnd);
-
-        if (it == s_HWNDMap.end())
-            return nullptr;
-        else
-            return it->second;
-    }
-
-    void Window::AttachMap(HWND hWnd)
-    {
-        Attach(hWnd);
-        s_HWNDMap.insert(HWNDMapT::value_type(GetHWND(), this));
-    }
-
-    void Window::DetachMap()
-    {
-        s_HWNDMap.erase(GetHWND());
-        if (s_HWNDMap.size() == 0)        // Last window has been destroyed
-            PostQuitMessage(s_ExitCode);
-        delete this;
-    }
-
     LRESULT Window::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)
     {
         LRESULT        RetVal = 0;
@@ -128,8 +100,7 @@ namespace rad
         {
             SetLastMessage(Message, wParam, lParam);
 
-            for (WindowListener* pListener : m_WindowListeners)
-                pListener->OnPreMessage(this, Message, wParam, lParam);
+            DoPreMessage(Message, wParam, lParam);
 
             switch (Message)
             {
@@ -334,8 +305,7 @@ namespace rad
 
             //if (Message != WM_NCDESTROY)    // the object is destroyed with this message
             {
-                for (WindowListener* pListener : m_WindowListeners)
-                    pListener->OnPostMessage(this, Message, wParam, lParam);
+                DoPostMessage(Message, wParam, lParam);
             }
         }
         catch (const WinError& e)
@@ -358,7 +328,7 @@ namespace rad
     {
         try
         {
-            return m_DefWndProc(GetHWND(), m_LastMessage, m_LastwParam, m_LastlParam);
+            return m_DefWndProc(GetHWND(), GetLastMessage(), GetLastwParam(), GetLastlParam());
         }
         catch (const WinError& e)
         {
@@ -614,12 +584,5 @@ namespace rad
     LRESULT Window::UnknownMessage(UINT /*Message*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
     {
         return DoDefault();
-    }
-
-    void Window::RemoveWindowListener(WindowListener* pWindowListener)
-    {
-        WindowListenersContT::iterator it = std::find(m_WindowListeners.begin(), m_WindowListeners.end(), pWindowListener);
-        if (it != m_WindowListeners.end())
-            m_WindowListeners.erase(it);
     }
 }

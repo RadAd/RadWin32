@@ -23,6 +23,7 @@
     <ClCompile Include="Rad\GUI\MessageLoop.cpp" />
     <ClCompile Include="Rad\GUI\RegClass.cpp" />
     <ClCompile Include="Rad\GUI\Window.cpp" />
+    <ClCompile Include="Rad\GUI\WindowMap.cpp" />
     <ClCompile Include="Rad\WinError.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +34,7 @@
     <ClInclude Include="Rad\GUI\Window.h" />
     <ClInclude Include="Rad\GUI\WindowCreate.h" />
     <ClInclude Include="Rad\GUI\WindowListener.h" />
+    <ClInclude Include="Rad\GUI\WindowMap.h" />
     <ClInclude Include="Rad\GUI\WindowProxy.h" />
     <ClInclude Include="Rad\GUI\RegClass.h" />
     <ClInclude Include="Rad\Rect.h" />
