@@ -39,6 +39,7 @@
     <ClInclude Include="Rad\GUI\WindowCreate.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Rad\Rect.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">

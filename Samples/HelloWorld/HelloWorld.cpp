@@ -13,7 +13,7 @@ public:
     {
     }
 
-    virtual LRESULT OnPaint(CPaintDC &DC)
+    virtual LRESULT OnPaint(PaintDC& DC)
     {
         RECT r;
         GetClientRect(&r);

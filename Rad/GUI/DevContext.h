@@ -59,14 +59,14 @@ namespace rad
             LineTo(Left, Top);
         }
 
-        void AlphaBlend(int XDest, int YDest, int Width, int Height, const DevContext &SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, BLENDFUNCTION ftn)
+        void AlphaBlend(int XDest, int YDest, int Width, int Height, const DevContext& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, BLENDFUNCTION ftn)
         {
             assert(IsValid());
             if (::AlphaBlend(m_hDC, XDest, YDest, Width, Height, SrDevContext.m_hDC, XSrc, YSrc, WidthSrc, HeightSrc, ftn) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void BitBlt(int XDest, int YDest, int Width, int Height, const DevContext &SrDevContext, int XSrc, int YSrc, DWORD RasterOp)
+        void BitBlt(int XDest, int YDest, int Width, int Height, const DevContext& SrDevContext, int XSrc, int YSrc, DWORD RasterOp)
         {
             assert(IsValid());
             if (::BitBlt(m_hDC, XDest, YDest, Width, Height, SrDevContext.m_hDC, XSrc, YSrc, RasterOp) == 0)
@@ -80,14 +80,14 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void StretchBlt(int XDest, int YDest, int WidthDest, int HeightDest, const DevContext &SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, DWORD RasterOp)
+        void StretchBlt(int XDest, int YDest, int WidthDest, int HeightDest, const DevContext& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, DWORD RasterOp)
         {
             assert(IsValid());
             if (::StretchBlt(m_hDC, XDest, YDest, WidthDest, HeightDest, SrDevContext.m_hDC, XSrc, YSrc, WidthSrc, HeightSrc, RasterOp) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void TransparentBlt(int XDest, int YDest, int Width, int Height, const DevContext &SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, COLORREF BgColor)
+        void TransparentBlt(int XDest, int YDest, int Width, int Height, const DevContext& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, COLORREF BgColor)
         {
             assert(IsValid());
             if (::TransparentBlt(m_hDC, XDest, YDest, Width, Height, SrDevContext.m_hDC, XSrc, YSrc, WidthSrc, HeightSrc, BgColor) == 0)
@@ -256,24 +256,24 @@ namespace rad
         HDC    m_hDC;
     };
 
-    class CPaintDC : public DevContext
+    class PaintDC : public DevContext
     {
     public:
-        CPaintDC()
+        PaintDC()
         {
         }
 
-        CPaintDC(WindowProxy &Window)
+        PaintDC(WindowProxy& Window)
         {
             Create(Window);
         }
 
-        ~CPaintDC()
+        ~PaintDC()
         {
             Delete();
         }
 
-        void Create(WindowProxy &Window)
+        void Create(WindowProxy& Window)
         {
             m_Window = Window;
             Attach(BeginPaint(m_Window.GetHWND(), &m_ps));
@@ -307,7 +307,7 @@ namespace rad
         {
         }
 
-        CWindowDC(WindowProxy &Window)
+        CWindowDC(WindowProxy& Window)
         {
             Create(Window);
         }
@@ -317,7 +317,7 @@ namespace rad
             Delete();
         }
 
-        void Create(WindowProxy &Window)
+        void Create(WindowProxy& Window)
         {
             m_Window = Window;
             Attach(::GetDC(m_Window.GetHWND()));

@@ -65,7 +65,7 @@ namespace rad
 #endif
             }
         }
-        catch (const WinError &e)
+        catch (const WinError& e)
         {
             TCHAR    Text[1024];
             GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
@@ -140,7 +140,7 @@ namespace rad
 
             case WM_PAINT:
                 {
-                    CPaintDC DC(*this);
+                    PaintDC DC(*this);
                     RetVal = OnPaint(DC);
                 }
                 break;
@@ -339,7 +339,7 @@ namespace rad
                     pListener->OnPostMessage(this, Message, wParam, lParam);
             }
         }
-        catch (const WinError &e)
+        catch (const WinError& e)
         {
             TCHAR    Text[1024];
             GetWindowText(Text);
@@ -361,7 +361,7 @@ namespace rad
         {
             return m_DefWndProc(GetHWND(), m_LastMessage, m_LastwParam, m_LastlParam);
         }
-        catch (const WinError &e)
+        catch (const WinError& e)
         {
             TCHAR    Text[1024];
             GetWindowText(Text);
@@ -381,7 +381,7 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnPaint(CPaintDC &/*DC*/)
+    LRESULT Window::OnPaint(PaintDC& /*DC*/)
     {
         return DoDefault();
     }
@@ -472,7 +472,7 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnEraseBackground(DevContext & /*DC*/)
+    LRESULT Window::OnEraseBackground(DevContext& /*DC*/)
     {
         return DoDefault();
     }
@@ -537,7 +537,7 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnMouseWheel(int /*Flags*/, short /*Distance*/, const POINTS & /*Point*/)
+    LRESULT Window::OnMouseWheel(int /*Flags*/, short /*Distance*/, const POINTS& /*Point*/)
     {
         return DoDefault();
     }

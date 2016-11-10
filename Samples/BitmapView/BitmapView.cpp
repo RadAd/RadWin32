@@ -3,10 +3,27 @@
 #include <Rad\GUI\GdiObject.h>
 #include <Rad\GUI\RegClass.h>
 #include <Rad\GUI\MessageLoop.h>
+#include <Rad\Rect.h>
 
 #include "resource.h"
 
 using namespace rad;
+
+void DrawBitmap(DevContext& DC, const Bitmap& bmp, POINT p, DWORD RasterOp = SRCCOPY)
+{
+    SIZE s = bmp.GetSize();
+    CMemDC mdc(DC);
+    TempSelectObject selectbmp(mdc, bmp);
+    DC.BitBlt(p.x, p.y, s.cx, s.cy, mdc, 0, 0, RasterOp);
+}
+
+void DrawBitmapCentered(DevContext& DC, const Bitmap& bmp, POINT p, DWORD RasterOp = SRCCOPY)
+{
+    SIZE s = bmp.GetSize();
+    CMemDC mdc(DC);
+    TempSelectObject selectbmp(mdc, bmp);
+    DC.BitBlt(p.x - s.cx/2, p.y - s.cy/2, s.cx, s.cy, mdc, 0, 0, RasterOp);
+}
 
 class WindowBitmapView : public Window
 {
@@ -17,16 +34,12 @@ public:
         m_logo.Load(hInstance, IDB_WINLOGO);
     }
 
-    virtual LRESULT OnPaint(CPaintDC &DC)
+    virtual LRESULT OnPaint(PaintDC& DC)
     {
         RECT r;
         GetClientRect(&r);
-        BITMAP bm;
-        m_logo.GetObject(&bm);
 
-        CMemDC logoDC(DC);
-        TempSelectObject selectLogo(logoDC, m_logo);
-        DC.BitBlt((r.left + r.right - bm.bmWidth)/2, (r.top + r.bottom - bm.bmHeight)/2, bm.bmWidth, bm.bmHeight, logoDC, 0, 0, SRCCOPY);
+        DrawBitmapCentered(DC, m_logo, GetCenter(r));
 
         return Window::OnPaint(DC);
     }

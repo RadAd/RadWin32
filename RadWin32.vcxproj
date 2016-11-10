@@ -33,6 +33,7 @@
     <ClInclude Include="Rad\GUI\WindowListener.h" />
     <ClInclude Include="Rad\GUI\WindowProxy.h" />
     <ClInclude Include="Rad\GUI\RegClass.h" />
+    <ClInclude Include="Rad\Rect.h" />
     <ClInclude Include="Rad\tstring.h" />
     <ClInclude Include="Rad\WinError.h" />
   </ItemGroup>

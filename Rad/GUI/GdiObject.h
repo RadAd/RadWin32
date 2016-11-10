@@ -156,7 +156,7 @@ namespace rad
             _tcscpy_s(lfFaceName, LF_FACESIZE, FaceName);
         }
 
-        const LogFont &operator=(const LOGFONT* LogFont)
+        const LogFont& operator=(const LOGFONT* LogFont)
         {
             CopyMemory(this, LogFont, sizeof(LOGFONT));
             return *this;
@@ -245,6 +245,18 @@ namespace rad
         void GetObject(BITMAP* Details) const
         {
             GDIObject::GetObject((void*) Details, sizeof(BITMAP));
+        }
+
+    public: //Utils
+        SIZE GetSize() const
+        {
+            BITMAP bm;
+            GetObject(&bm);
+
+            SIZE s;
+            s.cx = bm.bmWidth;
+            s.cy = bm.bmHeight;
+            return s;
         }
     };
 

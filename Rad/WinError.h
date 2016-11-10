@@ -25,12 +25,12 @@ namespace rad
         HMODULE         m_hModule;
 
     public:
-        WinError(HMODULE hModule, const std::tstring &UserMessage = _T("Windows Error : "), DWORD Error = GetLastError())
+        WinError(HMODULE hModule, const std::tstring& UserMessage = _T("Windows Error : "), DWORD Error = GetLastError())
             : m_Error(Error), m_UserMessage(UserMessage), m_hModule(hModule)
         {
         }
 
-        WinError(const std::tstring &UserMessage = _T("Windows Error : "), DWORD Error = GetLastError())
+        WinError(const std::tstring& UserMessage = _T("Windows Error : "), DWORD Error = GetLastError())
             : m_Error(Error), m_UserMessage(UserMessage), m_hModule(NULL)
         {
         }

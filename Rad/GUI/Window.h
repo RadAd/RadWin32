@@ -9,7 +9,7 @@
 namespace rad
 {
     class DevContext;
-    class CPaintDC;
+    class PaintDC;
     class WindowCreate;
     class WindowListener;
 
@@ -51,7 +51,7 @@ namespace rad
     public:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
         virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct);
-        virtual LRESULT OnPaint(CPaintDC &DC);
+        virtual LRESULT OnPaint(PaintDC& DC);
         virtual LRESULT OnMove(int x, int y);
         virtual LRESULT OnMouseMove(UINT Keys, int x, int y);
         virtual LRESULT OnMouseLeave();
@@ -69,7 +69,7 @@ namespace rad
         virtual LRESULT OnContextMenu(HWND hWnd, int x, int y);
         virtual LRESULT OnDrawItem(UINT ID, LPDRAWITEMSTRUCT DrawItem);
         virtual LRESULT OnDropFiles(HDROP hDrop);
-        virtual LRESULT OnEraseBackground(DevContext &DC);
+        virtual LRESULT OnEraseBackground(DevContext& DC);
         virtual LRESULT OnEnterSizeMove();
         virtual LRESULT OnExitSizeMove();
         virtual HICON OnGetIcon(int Type);
@@ -82,7 +82,7 @@ namespace rad
         virtual LRESULT OnKeyUp(int VirtKey, const KeyInfoT* KeyInfo);
         virtual LRESULT OnMeasureItem(UINT ID, LPMEASUREITEMSTRUCT MeasureItem);
         virtual LRESULT OnMenuSelect(UINT Item, UINT Flags, HMENU Menu);
-        virtual LRESULT OnMouseWheel(int Flags, short Distance, const POINTS &Point);
+        virtual LRESULT OnMouseWheel(int Flags, short Distance, const POINTS& Point);
         virtual LRESULT OnNotify(int CtrlID, LPNMHDR Header);
         virtual LRESULT OnSettingChange(UINT Flag, LPCTSTR Section);
         virtual LRESULT OnSetCursor(HWND hWnd, UINT HitTest, UINT MouseMsg);

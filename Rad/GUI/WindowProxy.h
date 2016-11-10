@@ -365,7 +365,7 @@ namespace rad
         }
 
         void SetWindowPos(
-            const WindowProxy &Next,
+            const WindowProxy& Next,
             int X,
             int Y,
             int cx,
@@ -471,7 +471,7 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void ChangeClipboardChain(WindowProxy &Next)
+        void ChangeClipboardChain(WindowProxy& Next)
         {
             assert(IsWindow());
             ::ChangeClipboardChain(m_hWnd, Next.m_hWnd);
@@ -564,7 +564,7 @@ namespace rad
         HWND    m_hWnd;
     };
 
-    inline int MessageBox(WindowProxy &Window, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
+    inline int MessageBox(WindowProxy& Window, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType)
     {
         return MessageBox(Window.GetHWND(), lpText, lpCaption, uType);
     }
