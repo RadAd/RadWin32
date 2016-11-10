@@ -25,11 +25,6 @@ namespace rad
         };
 
     public:
-        Window(WNDPROC DefWndProc = DefWindowProc)
-            : m_DefWndProc(DefWndProc)
-        {
-        }
-
         void CreateWnd(const WindowCreate& wc);
         void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
 
@@ -84,13 +79,36 @@ namespace rad
         virtual LRESULT OnNCDestroy();
         virtual LRESULT UnknownMessage(UINT Message, WPARAM wParam, LPARAM lParam);
 
+    private:
+        static void SetLastMessage(WNDPROC DefWndProc, UINT Message, WPARAM wParam, LPARAM lParam)
+        {
+            s_DefWndProc = DefWndProc;
+            s_LastMessage = Message;
+            s_LastwParam = wParam;
+            s_LastlParam = lParam;
+        }
+
+        static LRESULT DoDefault(HWND hWnd)
+        {
+            return s_DefWndProc(hWnd, s_LastMessage, s_LastwParam, s_LastlParam);
+        }
+
+    private:
+        static WNDPROC s_DefWndProc;
+        static UINT    s_LastMessage;
+        static WPARAM  s_LastwParam;
+        static LPARAM  s_LastlParam;
+
     protected:
-        LRESULT DoDefault();
+        LRESULT DoDefault()
+        {
+            return DoDefault(GetHWND());
+        }
 
     private:
         friend RegClass;
-        static LRESULT CALLBACK WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-        WNDPROC m_DefWndProc;
+        static LRESULT CALLBACK WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc);
+        static LRESULT CALLBACK DefWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     };
 }
 

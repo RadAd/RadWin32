@@ -11,7 +11,12 @@ namespace rad
 {
     const HDC DevContext::Invalid = NULL;
 
-    LRESULT CALLBACK Window::WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    WNDPROC Window::s_DefWndProc = nullptr;
+    UINT    Window::s_LastMessage = 0;
+    WPARAM  Window::s_LastwParam = 0;
+    LPARAM  Window::s_LastlParam = 0;
+
+    LRESULT Window::WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc)
     {
         static int depth = 0;
         LRESULT RetVal = 0;
@@ -41,6 +46,7 @@ namespace rad
 
             if (WindowHandler != nullptr)
             {
+                SetLastMessage(DefWndProc, uMsg, wParam, lParam);
                 RetVal = WindowHandler->OnMessage(uMsg, wParam, lParam);
 
                 if (!::IsWindow(hWnd) && depth <= 1)
@@ -55,16 +61,16 @@ namespace rad
                 switch (uMsg)
                 {
                 case WM_GETMINMAXINFO:
-                    RetVal = DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    RetVal = DefWndProc(hWnd, uMsg, wParam, lParam);
                     break;
 
                 default:
                     // Should never get here
-                    RetVal = DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    RetVal = DefWndProc(hWnd, uMsg, wParam, lParam);
                     break;
                 }
 #else
-                RetVal = DefWindowProc(hWnd, uMsg, wParam, lParam);
+                RetVal = DefWndProc(hWnd, uMsg, wParam, lParam);
 #endif
             }
         }
@@ -85,6 +91,11 @@ namespace rad
         return RetVal;
     }
 
+    LRESULT Window::DefWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, DefWindowProc);
+    }
+
     void Window::CreateWnd(const WindowCreate& wc)
     {
         wc.Create((LPVOID) this);
@@ -102,8 +113,6 @@ namespace rad
 
         try
         {
-            SetLastMessage(Message, wParam, lParam);
-
             DoPreMessage(Message, wParam, lParam);
 
             switch (Message)
@@ -326,27 +335,6 @@ namespace rad
         }
 
         return RetVal;
-    }
-
-    LRESULT Window::DoDefault()
-    {
-        try
-        {
-            return m_DefWndProc(GetHWND(), GetLastMessage(), GetLastwParam(), GetLastlParam());
-        }
-        catch (const WinError& e)
-        {
-            TCHAR    Text[1024];
-            GetWindowText(Text);
-            MessageBox(*this, e.GetString().c_str(), Text, MB_OK | MB_ICONSTOP);
-        }
-        catch (...)
-        {
-            TCHAR    Text[1024];
-            GetWindowText(Text);
-            MessageBox(*this, _T("Unknown Exception. Caught in ") _T(__FUNCTION__), Text, MB_OK | MB_ICONSTOP);
-        }
-        return 0;
     }
 
     LRESULT Window::OnCreate(LPCREATESTRUCT /*CreateStruct*/)

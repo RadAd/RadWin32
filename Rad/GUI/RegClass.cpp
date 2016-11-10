@@ -9,7 +9,7 @@ namespace rad
     {
         ZeroMemory(this, sizeof(WNDCLASSEX));
         cbSize = sizeof(WNDCLASSEX);
-        lpfnWndProc = Window::WndHandlerWindowProc;
+        lpfnWndProc = Window::DefWndHandlerWindowProc;
         hInstance = _hInstance;
         hCursor = LoadCursor(NULL, IDC_ARROW);
         hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);

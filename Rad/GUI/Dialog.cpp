@@ -93,8 +93,6 @@ namespace rad
 
         try
         {
-            SetLastMessage(Message, wParam, lParam);
-
             DoPreMessage(Message, wParam, lParam);
 
             switch (Message)
