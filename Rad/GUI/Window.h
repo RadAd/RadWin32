@@ -29,7 +29,7 @@ namespace rad
 
     protected:
         Window(const WindowCreate& wc, WNDPROC DefWndProc = DefWindowProc);
-        Window(HINSTANCE hInstance, LPCTSTR WindowName, WNDPROC DefWndProc = DefWindowProc);
+        Window(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL, WNDPROC DefWndProc = DefWindowProc);
 
     protected:
         UINT GetLastMessage() const { return m_LastMessage; }
@@ -110,9 +110,9 @@ namespace rad
             m_LastlParam = lParam;
         }
 
-        UINT    m_LastMessage;
-        WPARAM  m_LastwParam;
-        LPARAM  m_LastlParam;
+        UINT    m_LastMessage = 0;
+        WPARAM  m_LastwParam = 0;
+        LPARAM  m_LastlParam = 0;
         WNDPROC m_DefWndProc;
 
     public:    // static

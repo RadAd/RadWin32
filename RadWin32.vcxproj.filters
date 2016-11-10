@@ -11,6 +11,9 @@
     <ClCompile Include="Rad\GUI\RegClass.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Rad\GUI\Dialog.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rad\tstring.h" />
@@ -40,6 +43,9 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Rad\Rect.h" />
+    <ClInclude Include="Rad\GUI\Dialog.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">

@@ -1,7 +1,6 @@
 #include "Window.H"
 
 #include <WindowsX.H>
-#include <algorithm>
 
 #include "DevContext.H"
 #include "WindowCreate.h"
@@ -89,11 +88,11 @@ namespace rad
         wc.Create((LPVOID) this);
     }
 
-    Window::Window(HINSTANCE hInstance, LPCTSTR WindowName, WNDPROC DefWndProc)
+    Window::Window(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent, WNDPROC DefWndProc)
         : m_DefWndProc(DefWndProc)
     {
         assert(m_DefWndProc != nullptr);
-        WindowCreate wc(hInstance, WindowName);
+        WindowCreate wc(hInstance, WindowName, hParent);
         wc.Create((LPVOID) this);
     }
 

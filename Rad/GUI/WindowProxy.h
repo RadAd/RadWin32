@@ -483,13 +483,6 @@ namespace rad
         }
 
     public: //Dialog functions
-        void EndDialog(int Result)
-        {
-            assert(IsWindow());
-            if (::EndDialog(m_hWnd, Result) == 0)
-                ThrowWinError(_T(__FUNCTION__));
-        }
-
         WindowProxy GetDlgItem(int DlgItemID)
         {
             assert(IsWindow());
