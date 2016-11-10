@@ -24,9 +24,14 @@ namespace rad
                 Transition : 1;
         };
 
-    protected:
-        Window(const WindowCreate& wc, WNDPROC DefWndProc = DefWindowProc);
-        Window(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL, WNDPROC DefWndProc = DefWindowProc);
+    public:
+        Window(WNDPROC DefWndProc = DefWindowProc)
+            : m_DefWndProc(DefWndProc)
+        {
+        }
+
+        void CreateWnd(const WindowCreate& wc);
+        void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
 
     protected:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);

@@ -1,7 +1,6 @@
 #include <Rad\GUI\Window.h>
 #include <Rad\GUI\DevContext.h>
 #include <Rad\GUI\GdiObject.h>
-#include <Rad\GUI\RegClass.h>
 #include <Rad\GUI\MessageLoop.h>
 #include <Rad\Rect.h>
 
@@ -28,8 +27,15 @@ void DrawBitmapCentered(DevContext& DC, const Bitmap& bmp, POINT p, DWORD Raster
 class WindowBitmapView : public Window
 {
 public:
+    static WindowBitmapView* Create(HINSTANCE hInstance)
+    {
+        WindowBitmapView* w = new WindowBitmapView(hInstance);
+        w->CreateWnd(hInstance, _T("Bitmap View"));
+        return w;
+    }
+
+protected:
     WindowBitmapView(HINSTANCE hInstance)
-        : Window(hInstance, _T("Bitmap View"))
     {
         m_logo.Load(hInstance, IDB_WINLOGO);
     }
@@ -43,6 +49,7 @@ public:
 
         return Window::OnPaint(DC);
     }
+
 private:
     Bitmap m_logo;
 };
@@ -54,8 +61,8 @@ int CALLBACK WinMain(
     _In_ int       nCmdShow
 )
 {
-    WindowBitmapView* bv = new WindowBitmapView(hInstance);
-    bv->ShowWindow(nCmdShow);
+    WindowBitmapView* w = WindowBitmapView::Create(hInstance);
+    w->ShowWindow(nCmdShow);
 
     return (int) DoMessageLoop();
 }

@@ -27,8 +27,16 @@ namespace rad
             if (uMsg == WM_NCCREATE)
             {
                 assert(WindowHandler == nullptr);
-                WindowHandler = (Window*) (((LPCREATESTRUCT) lParam)->lpCreateParams);
-                WindowHandler->AttachMap(hWnd);
+                LPCREATESTRUCT cs = (LPCREATESTRUCT) lParam;
+                if (cs->dwExStyle & WS_EX_MDICHILD)
+                {
+                    LPMDICREATESTRUCT mcs = (LPMDICREATESTRUCT) cs->lpCreateParams;
+                    WindowHandler = (Window*) mcs->lParam;
+                }
+                else
+                    WindowHandler = (Window*) cs->lpCreateParams;
+                if (WindowHandler != nullptr)
+                    WindowHandler->AttachMap(hWnd);
             }
 
             if (WindowHandler != nullptr)
@@ -77,17 +85,13 @@ namespace rad
         return RetVal;
     }
 
-    Window::Window(const WindowCreate& wc, WNDPROC DefWndProc)
-        : m_DefWndProc(DefWndProc)
+    void Window::CreateWnd(const WindowCreate& wc)
     {
-        assert(m_DefWndProc != nullptr);
         wc.Create((LPVOID) this);
     }
 
-    Window::Window(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent, WNDPROC DefWndProc)
-        : m_DefWndProc(DefWndProc)
+    void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
     {
-        assert(m_DefWndProc != nullptr);
         WindowCreate wc(hInstance, WindowName, hParent);
         wc.Create((LPVOID) this);
     }

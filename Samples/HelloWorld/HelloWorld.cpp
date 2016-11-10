@@ -1,6 +1,5 @@
 #include <Rad\GUI\Window.h>
 #include <Rad\GUI\DevContext.h>
-#include <Rad\GUI\RegClass.h>
 #include <Rad\GUI\MessageLoop.h>
 
 using namespace rad;
@@ -8,11 +7,14 @@ using namespace rad;
 class WindowHelloWorld : public Window
 {
 public:
-    WindowHelloWorld(HINSTANCE hInstance)
-        : Window(hInstance, _T("Hello World"))
+    static WindowHelloWorld* Create(HINSTANCE hInstance)
     {
+        WindowHelloWorld* w = new WindowHelloWorld();
+        w->CreateWnd(hInstance, _T("Hello World"));
+        return w;
     }
 
+protected:
     virtual LRESULT OnPaint(PaintDC& DC)
     {
         RECT r;
@@ -30,8 +32,8 @@ int CALLBACK WinMain(
     _In_ int       nCmdShow
 )
 {
-    WindowHelloWorld* hw = new WindowHelloWorld(hInstance);
-    hw->ShowWindow(nCmdShow);
+    WindowHelloWorld* w = WindowHelloWorld::Create(hInstance);
+    w->ShowWindow(nCmdShow);
 
     return (int) DoMessageLoop();
 }

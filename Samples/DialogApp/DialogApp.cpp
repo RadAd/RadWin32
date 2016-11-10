@@ -13,10 +13,12 @@ int CALLBACK WinMain(
 )
 {
 #if 1   // Modal dialog
+    nCmdShow;   // Unreferenced
     Dialog dlg;
-    return dlg.DoModal(hInstance, IDD_DIALOG1, NULL);
+    return (int) dlg.DoModal(hInstance, IDD_DIALOG1, NULL);
 #else   // Modeless dialog
-    Dialog* dlg = new Dialog(hInstance, IDD_DIALOG1, NULL);
+    Dialog* dlg = new Dialog();
+    dlg->CreateDlg(hInstance, IDD_DIALOG1, NULL);
     dlg->ShowWindow(nCmdShow);
 
     return (int) DoMessageLoop();

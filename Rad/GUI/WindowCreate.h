@@ -9,27 +9,27 @@ namespace rad
     class WindowCreate
     {
     public:
-        WindowCreate(HINSTANCE _hInstance, LPCTSTR WindowName, HWND _hParent = NULL)
+        WindowCreate(HINSTANCE _hInstance, LPCTSTR _WindowName, HWND _hParent = NULL)
         {
             hInstance = _hInstance;
             ClassName = MAKEINTATOM(RegClass::GetSimple(_hInstance));
-            WindowName = WindowName;
+            WindowName = _WindowName;
             hParent = _hParent;
         }
 
-        WindowCreate(HINSTANCE _hInstance, LPCTSTR WindowName, LPCTSTR ClassName, HWND _hParent = NULL)
+        WindowCreate(HINSTANCE _hInstance, LPCTSTR _WindowName, LPCTSTR _ClassName, HWND _hParent = NULL)
         {
             hInstance = _hInstance;
-            ClassName = ClassName;
-            WindowName = WindowName;
+            ClassName = _ClassName;
+            WindowName = _WindowName;
             hParent = _hParent;
         }
 
-        WindowCreate(HINSTANCE _hInstance, LPCTSTR WindowName, ATOM Class, HWND _hParent = NULL)
+        WindowCreate(HINSTANCE _hInstance, LPCTSTR _WindowName, ATOM Class, HWND _hParent = NULL)
         {
             hInstance = _hInstance;
             ClassName = MAKEINTATOM(Class);
-            WindowName = WindowName;
+            WindowName = _WindowName;
             hParent = _hParent;
         }
 

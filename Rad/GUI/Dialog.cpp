@@ -68,7 +68,7 @@ namespace rad
         return RetVal;
     }
 
-    Dialog::Dialog(HINSTANCE hInstance, int Resource, HWND hParent)
+    void Dialog::CreateDlg(HINSTANCE hInstance, int Resource, HWND hParent)
     {
         CreateDialogParam(hInstance, MAKEINTRESOURCE(Resource), hParent, DlgHandlerWindowProc, (LPARAM) this);
     }
