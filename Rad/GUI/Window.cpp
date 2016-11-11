@@ -3,6 +3,7 @@
 #include <WindowsX.H>
 
 #include "DevContext.H"
+#include "MDIFrame.h"
 #include "WindowCreate.h"
 #include "WindowListener.h"
 //#include "..\..\Logging.H"
@@ -95,6 +96,31 @@ namespace rad
     void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
     {
         CreateWnd(WindowCreate::GetSimple(hInstance), WindowName, hParent);
+    }
+
+    void Window::CreateWnd(LPCTSTR WindowName, HWND hParent)
+    {
+        assert(::IsWindow(hParent));
+        HINSTANCE hInstance = (HINSTANCE) ::GetWindowLongPtr(hParent, GWLP_HINSTANCE);
+        CreateWnd(hInstance, WindowName, hParent);
+    }
+
+    void Window::CreateMDIChild(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient)
+    {
+        wc.Create(hMDIClient, WindowName, this);
+    }
+
+    void Window::CreateMDIChild(LPCTSTR WindowName, HWND hMDIClient)
+    {
+        assert(::IsWindow(hMDIClient));
+        HINSTANCE hInstance = (HINSTANCE) ::GetWindowLongPtr(hMDIClient, GWLP_HINSTANCE);
+        MDIChildCreate wc(hInstance);
+        CreateMDIChild(wc, WindowName, hMDIClient);
+    }
+
+    void Window::CreateMDIChild(LPCTSTR WindowName, MDIFrame* f)
+    {
+        CreateMDIChild(WindowName, f->GetMDIClient().GetHWND());
     }
 
     LRESULT Window::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)

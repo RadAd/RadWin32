@@ -6,6 +6,8 @@
 namespace rad
 {
     class DevContext;
+    class MDIChildCreate;
+    class MDIFrame;
     class PaintDC;
     class RegClass;
     class WindowCreate;
@@ -27,6 +29,10 @@ namespace rad
     public:
         virtual void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent = NULL);
         virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
+        virtual void CreateWnd(LPCTSTR WindowName, HWND hParent);
+        virtual void CreateMDIChild(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient);
+        virtual void CreateMDIChild(LPCTSTR WindowName, HWND hMDIClient);
+        virtual void CreateMDIChild(LPCTSTR WindowName, MDIFrame* f);
 
     protected:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
