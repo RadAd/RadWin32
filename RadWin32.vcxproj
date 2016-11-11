@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rad\GUI\Dialog.cpp" />
+    <ClCompile Include="Rad\GUI\MDIFrame.cpp" />
     <ClCompile Include="Rad\GUI\MessageLoop.cpp" />
     <ClCompile Include="Rad\GUI\RegClass.cpp" />
     <ClCompile Include="Rad\GUI\Window.cpp" />

@@ -19,7 +19,7 @@ int CALLBACK WinMain(
     hw->CreateWnd(hInstance, _T("MDI App"));
     hw->ShowWindow(nCmdShow);
 
-    (new Window())->CreateMDIChild(_T("MDI Child A"), hw);
+    (new Window())->CreateMDIChildWnd(_T("MDI Child A"), hw);
 
     hw->CreateChild(new Window(), _T("MDI Child 1"));
     hw->CreateChild(new Window(), _T("MDI Child 2"));

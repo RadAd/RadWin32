@@ -2,19 +2,22 @@
 #define __MDIFrameHANDLER_H__
 
 #include "Window.h"
-#include "WindowCreate.h"
 
 namespace rad
 {
     class MDIFrame : public Window
     {
     public:
+        static RegClass GetMDIFrameReg(HINSTANCE _hInstance);
+        static ATOM GetMDIFrameAtom(HINSTANCE hInstance);
+        static RegClass GetMDIChildReg(HINSTANCE _hInstance);
+        static ATOM GetMDIChildAtom(HINSTANCE hInstance);
+
+    public:
         using Window::CreateWnd;
 
-        virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL)
-        {
-            CreateWnd(WindowCreate::GetMDIFrame(hInstance), WindowName, hParent);
-        }
+        virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
+        Window* CreateChild(Window* w, LPCTSTR WindowName);
 
     protected:
         virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct)
@@ -28,15 +31,6 @@ namespace rad
         }
 
     public:
-        Window* CreateChild(Window* w, LPCTSTR WindowName)
-        {
-            HINSTANCE hInstance = (HINSTANCE) GetWindowLongPtr(GWLP_HINSTANCE);
-
-            MDIChildCreate c(hInstance);
-            c.Create(GetMDIClient().GetHWND(), WindowName, w);
-            return w;
-        }
-
         WindowProxy GetMDIClient()
         {
             return GetMDIClient(GetHWND());
@@ -57,7 +51,6 @@ namespace rad
         }
 
     protected:
-        friend RegClass;
         static LRESULT CALLBACK MDIFrameWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
             return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, DefMDIFrameProc);

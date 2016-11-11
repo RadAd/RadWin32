@@ -17,6 +17,9 @@
     <ClCompile Include="Rad\GUI\WindowMap.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Rad\GUI\MDIFrame.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rad\tstring.h" />

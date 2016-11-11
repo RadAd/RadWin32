@@ -1,7 +1,6 @@
 #ifndef __WindowCREATE_H__
 #define __WindowCREATE_H__
 
-#include "RegClass.h"
 #include "..\WinError.h"
 
 namespace rad
@@ -9,16 +8,6 @@ namespace rad
     class WindowCreate
     {
     public:
-        static WindowCreate GetSimple(HINSTANCE _hInstance)
-        {
-            return WindowCreate(_hInstance, RegClass::GetSimple(_hInstance));
-        }
-
-        static WindowCreate GetMDIFrame(HINSTANCE _hInstance)
-        {
-            return WindowCreate(_hInstance, RegClass::GetMDIFrame(_hInstance));
-        }
-
         WindowCreate(HINSTANCE _hInstance, LPCTSTR _ClassName)
         {
             hInstance = _hInstance;
@@ -65,11 +54,11 @@ namespace rad
     class MDIChildCreate : public MDICREATESTRUCT
     {
     public:
-        MDIChildCreate(HINSTANCE hInstance)
+        MDIChildCreate(HINSTANCE hInstance, ATOM Atom)
         {
             ZeroMemory(this, sizeof(MDICREATESTRUCT));
             hOwner = hInstance;
-            szClass = MAKEINTATOM(RegClass::GetMDIChild(hInstance));
+            szClass = MAKEINTATOM(Atom);
             x = CW_USEDEFAULT;
             y = CW_USEDEFAULT;
             cx = CW_USEDEFAULT;

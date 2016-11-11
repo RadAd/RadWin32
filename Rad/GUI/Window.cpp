@@ -4,6 +4,7 @@
 
 #include "DevContext.H"
 #include "MDIFrame.h"
+#include "RegClass.h"
 #include "WindowCreate.h"
 #include "WindowListener.h"
 //#include "..\..\Logging.H"
@@ -11,6 +12,18 @@
 namespace rad
 {
     const HDC DevContext::Invalid = NULL;
+
+    RegClass Window::GetSimpleReg(HINSTANCE hInstance)
+    {
+        RegClass rc(hInstance, _T("SimpleWindow"), DefWndHandlerWindowProc);
+        return rc;
+    }
+
+    ATOM Window::GetSimpleAtom(HINSTANCE hInstance)
+    {
+        static ATOM Atom = GetSimpleReg(hInstance).Register();
+        return Atom;
+    }
 
     LRESULT Window::WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc)
     {
@@ -95,7 +108,7 @@ namespace rad
 
     void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
     {
-        CreateWnd(WindowCreate::GetSimple(hInstance), WindowName, hParent);
+        CreateWnd(WindowCreate(hInstance, GetSimpleAtom(hInstance)), WindowName, hParent);
     }
 
     void Window::CreateWnd(LPCTSTR WindowName, HWND hParent)
@@ -105,22 +118,22 @@ namespace rad
         CreateWnd(hInstance, WindowName, hParent);
     }
 
-    void Window::CreateMDIChild(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient)
+    void Window::CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient)
     {
         wc.Create(hMDIClient, WindowName, this);
     }
 
-    void Window::CreateMDIChild(LPCTSTR WindowName, HWND hMDIClient)
+    void Window::CreateMDIChildWnd(LPCTSTR WindowName, HWND hMDIClient)
     {
         assert(::IsWindow(hMDIClient));
         HINSTANCE hInstance = (HINSTANCE) ::GetWindowLongPtr(hMDIClient, GWLP_HINSTANCE);
-        MDIChildCreate wc(hInstance);
-        CreateMDIChild(wc, WindowName, hMDIClient);
+        MDIChildCreate wc(hInstance, MDIFrame::GetMDIChildAtom(hInstance));
+        CreateMDIChildWnd(wc, WindowName, hMDIClient);
     }
 
-    void Window::CreateMDIChild(LPCTSTR WindowName, MDIFrame* f)
+    void Window::CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f)
     {
-        CreateMDIChild(WindowName, f->GetMDIClient().GetHWND());
+        CreateMDIChildWnd(WindowName, f->GetMDIClient().GetHWND());
     }
 
     LRESULT Window::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)

@@ -8,15 +8,8 @@ namespace rad
     class RegClass : public WNDCLASSEX
     {
     public:
-        RegClass(HINSTANCE _hInstance, LPCTSTR ClassName);
-        ATOM Register();
-
-        static ATOM GetSimple(HINSTANCE _hInstance);
-        static ATOM GetMDIFrame(HINSTANCE _hInstance);
-        static ATOM GetMDIChild(HINSTANCE _hInstance);
-
-        static RegClass GetMDIFrameClass(HINSTANCE _hInstance);
-        static RegClass GetMDIChildClass(HINSTANCE _hInstance);
+        RegClass(HINSTANCE _hInstance, LPCTSTR ClassName, WNDPROC WndProc);
+        ATOM Register() const;
     };
 }
 

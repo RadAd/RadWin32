@@ -26,13 +26,16 @@ namespace rad
                 Transition : 1;
         };
 
+        static RegClass GetSimpleReg(HINSTANCE hInstance);
+        static ATOM GetSimpleAtom(HINSTANCE hInstance);
+
     public:
         virtual void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent = NULL);
         virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
         virtual void CreateWnd(LPCTSTR WindowName, HWND hParent);
-        virtual void CreateMDIChild(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient);
-        virtual void CreateMDIChild(LPCTSTR WindowName, HWND hMDIClient);
-        virtual void CreateMDIChild(LPCTSTR WindowName, MDIFrame* f);
+        virtual void CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient);
+        virtual void CreateMDIChildWnd(LPCTSTR WindowName, HWND hMDIClient);
+        virtual void CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f);
 
     protected:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
@@ -112,7 +115,6 @@ namespace rad
         }
 
     protected:
-        friend RegClass;
         static LRESULT WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc);
         static LRESULT CALLBACK DefWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     };
