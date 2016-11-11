@@ -100,8 +100,7 @@ namespace rad
 
     void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
     {
-        WindowCreate wc(hInstance);
-        wc.Create(WindowName, (LPVOID) this, hParent);
+        CreateWnd(WindowCreate::GetSimple(hInstance), WindowName, hParent);
     }
 
     LRESULT Window::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)

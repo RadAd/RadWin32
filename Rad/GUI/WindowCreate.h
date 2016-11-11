@@ -9,10 +9,14 @@ namespace rad
     class WindowCreate
     {
     public:
-        WindowCreate(HINSTANCE _hInstance)
+        static WindowCreate GetSimple(HINSTANCE _hInstance)
         {
-            hInstance = _hInstance;
-            ClassName = MAKEINTATOM(RegClass::GetSimple(_hInstance));
+            return WindowCreate(_hInstance, RegClass::GetSimple(_hInstance));
+        }
+
+        static WindowCreate GetMDIFrame(HINSTANCE _hInstance)
+        {
+            return WindowCreate(_hInstance, RegClass::GetMDIFrame(_hInstance));
         }
 
         WindowCreate(HINSTANCE _hInstance, LPCTSTR _ClassName)
@@ -56,16 +60,6 @@ namespace rad
         int             Width = CW_USEDEFAULT;
         int             Height = CW_USEDEFAULT;
         HMENU           hMenu = NULL;
-    };
-
-    class MDIFrameCreate : public WindowCreate
-    {
-    public:
-        MDIFrameCreate(HINSTANCE _hInstance)
-            : WindowCreate(_hInstance)
-        {
-            ClassName = MAKEINTATOM(RegClass::GetMDIFrame(_hInstance));
-        }
     };
 
     class MDIChildCreate : public MDICREATESTRUCT

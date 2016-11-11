@@ -13,8 +13,7 @@ namespace rad
 
         virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL)
         {
-            MDIFrameCreate wc(hInstance);
-            CreateWnd(wc, WindowName, hParent);
+            CreateWnd(WindowCreate::GetMDIFrame(hInstance), WindowName, hParent);
         }
 
     protected:
