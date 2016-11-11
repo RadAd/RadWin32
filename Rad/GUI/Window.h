@@ -13,6 +13,11 @@ namespace rad
     class Window : public WindowMap
     {
     public:
+        // TODO Tidy up
+        // Also use in dialog
+        bool m_delete = false;
+        int m_WndProcDepth = 0;
+
         struct KeyInfoT
         {
             int Repeat : 16,
@@ -25,8 +30,8 @@ namespace rad
         };
 
     public:
-        void CreateWnd(const WindowCreate& wc);
-        void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
+        virtual void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent = NULL);
+        virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
 
     protected:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
@@ -80,24 +85,24 @@ namespace rad
         virtual LRESULT UnknownMessage(UINT Message, WPARAM wParam, LPARAM lParam);
 
     private:
-        static void SetLastMessage(WNDPROC DefWndProc, UINT Message, WPARAM wParam, LPARAM lParam)
+        void SetLastMessage(WNDPROC DefWndProc, UINT Message, WPARAM wParam, LPARAM lParam)
         {
-            s_DefWndProc = DefWndProc;
-            s_LastMessage = Message;
-            s_LastwParam = wParam;
-            s_LastlParam = lParam;
+            m_DefWndProc = DefWndProc;
+            m_LastMessage = Message;
+            m_LastwParam = wParam;
+            m_LastlParam = lParam;
         }
 
-        static LRESULT DoDefault(HWND hWnd)
+        LRESULT DoDefault(HWND hWnd)
         {
-            return s_DefWndProc(hWnd, s_LastMessage, s_LastwParam, s_LastlParam);
+            return m_DefWndProc(hWnd, m_LastMessage, m_LastwParam, m_LastlParam);
         }
 
     private:
-        static WNDPROC s_DefWndProc;
-        static UINT    s_LastMessage;
-        static WPARAM  s_LastwParam;
-        static LPARAM  s_LastlParam;
+        WNDPROC m_DefWndProc;
+        UINT    m_LastMessage;
+        WPARAM  m_LastwParam;
+        LPARAM  m_LastlParam;
 
     protected:
         LRESULT DoDefault()
@@ -105,9 +110,9 @@ namespace rad
             return DoDefault(GetHWND());
         }
 
-    private:
+    protected:
         friend RegClass;
-        static LRESULT CALLBACK WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc);
+        static LRESULT WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc);
         static LRESULT CALLBACK DefWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     };
 }

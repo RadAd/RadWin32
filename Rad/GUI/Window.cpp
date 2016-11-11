@@ -11,17 +11,12 @@ namespace rad
 {
     const HDC DevContext::Invalid = NULL;
 
-    WNDPROC Window::s_DefWndProc = nullptr;
-    UINT    Window::s_LastMessage = 0;
-    WPARAM  Window::s_LastwParam = 0;
-    LPARAM  Window::s_LastlParam = 0;
-
     LRESULT Window::WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc)
     {
-        static int depth = 0;
+        //static int depth = 0;
         LRESULT RetVal = 0;
 
-        ++depth;
+        //++depth;
         try
         {
             //LogString("WndHandlerWindowProc: ");
@@ -46,10 +41,12 @@ namespace rad
 
             if (WindowHandler != nullptr)
             {
-                SetLastMessage(DefWndProc, uMsg, wParam, lParam);
+                ++WindowHandler->m_WndProcDepth;
+                WindowHandler->SetLastMessage(DefWndProc, uMsg, wParam, lParam);
                 RetVal = WindowHandler->OnMessage(uMsg, wParam, lParam);
+                --WindowHandler->m_WndProcDepth;
 
-                if (!::IsWindow(hWnd) && depth <= 1)
+                if (WindowHandler->m_delete && WindowHandler->m_WndProcDepth <= 0)
                 {
                     WindowHandler->DetachMap();
                     delete WindowHandler;
@@ -86,7 +83,7 @@ namespace rad
             ::GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
             MessageBox(hWnd, _T("Unknown Exception. Caught in ") _T(__FUNCTION__), Text, MB_OK | MB_ICONSTOP);
         }
-        --depth;
+        //--depth;
 
         return RetVal;
     }
@@ -96,15 +93,15 @@ namespace rad
         return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, DefWindowProc);
     }
 
-    void Window::CreateWnd(const WindowCreate& wc)
+    void Window::CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent)
     {
-        wc.Create((LPVOID) this);
+        wc.Create(WindowName, (LPVOID) this, hParent);
     }
 
     void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
     {
-        WindowCreate wc(hInstance, WindowName, hParent);
-        wc.Create((LPVOID) this);
+        WindowCreate wc(hInstance);
+        wc.Create(WindowName, (LPVOID) this, hParent);
     }
 
     LRESULT Window::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)
@@ -560,6 +557,7 @@ namespace rad
 
     LRESULT Window::OnDestroy()
     {
+        m_delete = true;
         return DoDefault();
     }
 

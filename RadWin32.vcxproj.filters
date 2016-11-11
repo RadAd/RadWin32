@@ -52,6 +52,9 @@
     <ClInclude Include="Rad\GUI\WindowMap.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Rad\GUI\MDIFrame.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">

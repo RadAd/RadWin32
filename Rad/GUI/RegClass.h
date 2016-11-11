@@ -12,6 +12,11 @@ namespace rad
         ATOM Register();
 
         static ATOM GetSimple(HINSTANCE _hInstance);
+        static ATOM GetMDIFrame(HINSTANCE _hInstance);
+        static ATOM GetMDIChild(HINSTANCE _hInstance);
+
+        static RegClass GetMDIFrameClass(HINSTANCE _hInstance);
+        static RegClass GetMDIChildClass(HINSTANCE _hInstance);
     };
 }
 

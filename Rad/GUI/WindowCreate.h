@@ -9,33 +9,27 @@ namespace rad
     class WindowCreate
     {
     public:
-        WindowCreate(HINSTANCE _hInstance, LPCTSTR _WindowName, HWND _hParent = NULL)
+        WindowCreate(HINSTANCE _hInstance)
         {
             hInstance = _hInstance;
             ClassName = MAKEINTATOM(RegClass::GetSimple(_hInstance));
-            WindowName = _WindowName;
-            hParent = _hParent;
         }
 
-        WindowCreate(HINSTANCE _hInstance, LPCTSTR _WindowName, LPCTSTR _ClassName, HWND _hParent = NULL)
+        WindowCreate(HINSTANCE _hInstance, LPCTSTR _ClassName)
         {
             hInstance = _hInstance;
             ClassName = _ClassName;
-            WindowName = _WindowName;
-            hParent = _hParent;
         }
 
-        WindowCreate(HINSTANCE _hInstance, LPCTSTR _WindowName, ATOM Class, HWND _hParent = NULL)
+        WindowCreate(HINSTANCE _hInstance, ATOM Class)
         {
             hInstance = _hInstance;
             ClassName = MAKEINTATOM(Class);
-            WindowName = _WindowName;
-            hParent = _hParent;
         }
 
         ~WindowCreate() { }
 
-        HWND Create(LPVOID data) const
+        HWND Create(LPCTSTR WindowName, LPVOID data, HWND _hParent = NULL) const
         {
             HWND hWnd = CreateWindowEx(ExStyle,
                 ClassName,
@@ -43,7 +37,7 @@ namespace rad
                 Style,
                 x, y,
                 Width, Height,
-                hParent, hMenu,
+                _hParent, hMenu,
                 hInstance,
                 data);
 
@@ -55,15 +49,51 @@ namespace rad
 
         HINSTANCE       hInstance = NULL;
         LPCTSTR         ClassName = nullptr;
-        LPCTSTR         WindowName = nullptr;
         DWORD           Style = WS_OVERLAPPEDWINDOW;
         DWORD           ExStyle = 0;
         int             x = CW_USEDEFAULT;
         int             y = CW_USEDEFAULT;
         int             Width = CW_USEDEFAULT;
         int             Height = CW_USEDEFAULT;
-        HWND            hParent = NULL;
         HMENU           hMenu = NULL;
+    };
+
+    class MDIFrameCreate : public WindowCreate
+    {
+    public:
+        MDIFrameCreate(HINSTANCE _hInstance)
+            : WindowCreate(_hInstance)
+        {
+            ClassName = MAKEINTATOM(RegClass::GetMDIFrame(_hInstance));
+        }
+    };
+
+    class MDIChildCreate : public MDICREATESTRUCT
+    {
+    public:
+        MDIChildCreate(HINSTANCE hInstance)
+        {
+            ZeroMemory(this, sizeof(MDICREATESTRUCT));
+            hOwner = hInstance;
+            szClass = MAKEINTATOM(RegClass::GetMDIChild(hInstance));
+            x = CW_USEDEFAULT;
+            y = CW_USEDEFAULT;
+            cx = CW_USEDEFAULT;
+            cy = CW_USEDEFAULT;
+            //style = MDIS_ALLCHILDSTYLES;
+        }
+
+        HWND Create(HWND hMDIClient, LPCTSTR WindowName, LPVOID data)
+        {
+            szTitle = WindowName;
+            lParam = (LPARAM) data;
+            HWND hWnd = (HWND) SendMessage(hMDIClient, WM_MDICREATE, 0, (LPARAM) this);
+
+            if (hWnd == NULL)
+                ThrowWinError(_T(__FUNCTION__));
+
+            return hWnd;
+        }
     };
 }
 

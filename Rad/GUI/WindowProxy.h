@@ -131,14 +131,6 @@ namespace rad
             return ::GetClassName(m_hWnd, String, N);
         }
 
-#if 0
-        DWORD GetClassLong(int Index) const
-        {
-            assert(IsWindow());
-            return ::GetClassLong(m_hWnd, Index);
-        }
-#endif
-
         ULONG_PTR GetClassLongPtr(int Index) const
         {
             assert(IsWindow());
@@ -236,10 +228,10 @@ namespace rad
             return ::GetWindow(m_hWnd, Index);
         }
 
-        long GetWindowLong(int Index) const
+        LONG_PTR GetWindowLongPtr(int Index) const
         {
             assert(IsWindow());
-            return ::GetWindowLong(m_hWnd, Index);
+            return ::GetWindowLongPtr(m_hWnd, Index);
         }
 
         void GetWindowPlacement(LPWINDOWPLACEMENT WindowPlacement) const
