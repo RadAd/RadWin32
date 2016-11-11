@@ -41,16 +41,10 @@ namespace rad
 
             if (WindowHandler != nullptr)
             {
-                ++WindowHandler->m_WndProcDepth;
+                WindowHandler->PushWndProcDepth();
                 WindowHandler->SetLastMessage(DefWndProc, uMsg, wParam, lParam);
                 RetVal = WindowHandler->OnMessage(uMsg, wParam, lParam);
-                --WindowHandler->m_WndProcDepth;
-
-                if (WindowHandler->m_delete && WindowHandler->m_WndProcDepth <= 0)
-                {
-                    WindowHandler->DetachMap();
-                    delete WindowHandler;
-                }
+                WindowHandler->PopWndProcDepth();
             }
             else
             {
@@ -556,7 +550,7 @@ namespace rad
 
     LRESULT Window::OnDestroy()
     {
-        m_delete = true;
+        MarkForDelete();
         return DoDefault();
     }
 

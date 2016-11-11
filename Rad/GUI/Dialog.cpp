@@ -4,10 +4,8 @@ namespace rad
 {
     INT_PTR CALLBACK Dialog::DlgHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        static int depth = 0;
         BOOL RetVal = FALSE;
 
-        ++depth;
         try
         {
             Dialog* DlgHandler = dynamic_cast<Dialog*>(FromHWND(hWnd));
@@ -21,14 +19,9 @@ namespace rad
 
             if (DlgHandler != NULL)
             {
+                DlgHandler->PushWndProcDepth();
                 RetVal = DlgHandler->OnMessage(uMsg, wParam, lParam);
-
-                if (!::IsWindow(hWnd) && depth <= 1)
-                {
-                    DlgHandler->DetachMap();
-                    if (!DlgHandler->m_IsModal)
-                        delete DlgHandler;
-                }
+                DlgHandler->PopWndProcDepth();
             }
             else
             {
@@ -63,7 +56,6 @@ namespace rad
             ::GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
             MessageBox(hWnd, _T("Unknown Exception. Caught in ") _T(__FUNCTION__), Text, MB_OK | MB_ICONSTOP);
         }
-        --depth;
 
         return RetVal;
     }
@@ -161,6 +153,8 @@ namespace rad
 
     BOOL Dialog::OnDestroy()
     {
+        if (!m_IsModal)
+            MarkForDelete();
         return TRUE;
     }
 

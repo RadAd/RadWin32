@@ -34,6 +34,32 @@ namespace rad
         typedef std::vector<WindowListener*> WindowListenersContT;
         WindowListenersContT    m_WindowListeners;
 
+    protected:
+        void PushWndProcDepth()
+        {
+            ++m_WndProcDepth;
+        }
+
+        void PopWndProcDepth()
+        {
+            --m_WndProcDepth;
+
+            if (m_MarkForDelete && m_WndProcDepth <= 0)
+            {
+                DetachMap();
+                delete this;
+            }
+        }
+
+        void MarkForDelete()
+        {
+            m_MarkForDelete = true;
+        }
+
+    private:
+        int m_WndProcDepth = 0;
+        int m_MarkForDelete = false;
+
     protected:    // static
         static WindowMap* FromHWND(HWND hWnd);
         void AttachMap(HWND hWnd);

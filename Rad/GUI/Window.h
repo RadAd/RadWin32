@@ -13,11 +13,6 @@ namespace rad
     class Window : public WindowMap
     {
     public:
-        // TODO Tidy up
-        // Also use in dialog
-        bool m_delete = false;
-        int m_WndProcDepth = 0;
-
         struct KeyInfoT
         {
             int Repeat : 16,
