@@ -101,14 +101,25 @@ namespace rad
         return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, DefWindowProc);
     }
 
+    LPCTSTR Window::GetWndClassName(HINSTANCE hInstance)
+    {
+        return MAKEINTATOM(GetSimpleAtom(hInstance));
+    }
+
+    LPCTSTR Window::GetMDIChildClassName(HINSTANCE hInstance)
+    {
+        return MAKEINTATOM(MDIFrame::GetMDIChildAtom(hInstance));
+    }
+
     void Window::CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent)
     {
-        wc.Create(WindowName, (LPVOID) this, hParent);
+        LPCTSTR _ClassName = GetWndClassName(wc.hInstance);
+        wc.Create(WindowName, (LPVOID) this, _ClassName, hParent);
     }
 
     void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
     {
-        CreateWnd(WindowCreate(hInstance, GetSimpleAtom(hInstance)), WindowName, hParent);
+        CreateWnd(WindowCreate(hInstance), WindowName, hParent);
     }
 
     void Window::CreateWnd(LPCTSTR WindowName, HWND hParent)
@@ -120,14 +131,14 @@ namespace rad
 
     void Window::CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient)
     {
-        wc.Create(hMDIClient, WindowName, this);
+        wc.Create(hMDIClient, WindowName, this, GetMDIChildClassName(wc.hInstance));
     }
 
     void Window::CreateMDIChildWnd(LPCTSTR WindowName, HWND hMDIClient)
     {
         assert(::IsWindow(hMDIClient));
         HINSTANCE hInstance = (HINSTANCE) ::GetWindowLongPtr(hMDIClient, GWLP_HINSTANCE);
-        MDIChildCreate wc(hInstance, MDIFrame::GetMDIChildAtom(hInstance));
+        MDIChildCreate wc(hInstance);
         CreateMDIChildWnd(wc, WindowName, hMDIClient);
     }
 

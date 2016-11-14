@@ -21,6 +21,9 @@ int CALLBACK WinMain(
 
     (new Window())->CreateMDIChildWnd(_T("MDI Child A"), hw);
 
+    //CreateWnd(new Window(), _T("Window 1"));
+    //CreateMDIChild(hw, new Window(), _T("MDI Child 1"));
+
     hw->CreateChild(new Window(), _T("MDI Child 1"));
     hw->CreateChild(new Window(), _T("MDI Child 2"));
     hw->CreateChild(new Window(), _T("MDI Child 3"));

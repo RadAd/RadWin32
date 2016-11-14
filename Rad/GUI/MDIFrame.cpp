@@ -32,17 +32,21 @@ namespace rad
         return Atom;
     }
 
-    void MDIFrame::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
+    LPCTSTR MDIFrame::GetClassName(HINSTANCE hInstance)
     {
-        CreateWnd(WindowCreate(hInstance, GetMDIFrameAtom(hInstance)), WindowName, hParent);
+        return MAKEINTATOM(GetMDIFrameAtom(hInstance));
     }
 
     Window* MDIFrame::CreateChild(Window* w, LPCTSTR WindowName)
     {
+#if 0
         HINSTANCE hInstance = (HINSTANCE) GetWindowLongPtr(GWLP_HINSTANCE);
 
-        MDIChildCreate c(hInstance, GetMDIChildAtom(hInstance));
-        c.Create(GetMDIClient().GetHWND(), WindowName, w);
+        MDIChildCreate c(hInstance);
+        c.Create(GetMDIClient().GetHWND(), WindowName, w, w->GetMDIChildClassName(hInstance));
+#else
+        w->CreateMDIChildWnd(WindowName, this);
+#endif
         return w;
     }
 }

@@ -14,9 +14,8 @@ namespace rad
         static ATOM GetMDIChildAtom(HINSTANCE hInstance);
 
     public:
-        using Window::CreateWnd;
+        LPCTSTR GetClassName(HINSTANCE hInstance);
 
-        virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
         Window* CreateChild(Window* w, LPCTSTR WindowName);
 
     protected:

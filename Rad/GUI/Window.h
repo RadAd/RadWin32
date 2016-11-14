@@ -30,12 +30,15 @@ namespace rad
         static ATOM GetSimpleAtom(HINSTANCE hInstance);
 
     public:
-        virtual void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent = NULL);
-        virtual void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
-        virtual void CreateWnd(LPCTSTR WindowName, HWND hParent);
-        virtual void CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient);
-        virtual void CreateMDIChildWnd(LPCTSTR WindowName, HWND hMDIClient);
-        virtual void CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f);
+        virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
+        virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
+
+        void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent = NULL);
+        void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
+        void CreateWnd(LPCTSTR WindowName, HWND hParent);
+        void CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient);
+        void CreateMDIChildWnd(LPCTSTR WindowName, HWND hMDIClient);
+        void CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f);
 
     protected:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
