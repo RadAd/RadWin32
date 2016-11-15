@@ -2,6 +2,7 @@
 *.VC.opendb
 Bin/*
 Int/*
+Include/*
 Samples/*/Int/*
 .vs/*
 *.aps
