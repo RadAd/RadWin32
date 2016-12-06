@@ -35,7 +35,7 @@ namespace rad
         {
         }
 
-        DWORD GetError()
+        DWORD GetError() const
         {
             return m_Error;
         }
