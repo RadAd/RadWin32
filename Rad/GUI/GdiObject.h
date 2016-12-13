@@ -2,59 +2,66 @@
 #define __GDIOBJECT_H__
 
 #include <commctrl.h>
+#include <memory>
 #include "DevContext.H"
 
 namespace rad
 {
-    class GDIObject
+    class GDIObjectDeleter
     {
     public:
-        static const HANDLE Invalid;
-
-        GDIObject()
-            : m_Object(NULL), m_Owns(false)
+        struct pointer
         {
+            pointer(HGDIOBJ _Object = NULL, bool _Owns = true)
+                : Object(_Object), Owns(_Owns)
+            {
+            }
+
+            HGDIOBJ Object;
+            bool Owns;
+        };
+
+        void operator()(pointer Handle)
+        {
+            if (Handle.Owns && Handle.Object != NULL)
+            {
+                if (::DeleteObject(Handle.Object) == 0)
+                    rad::ThrowWinError();
+            }
+        }
+    };
+
+    bool operator!=(const GDIObjectDeleter::pointer&l, const GDIObjectDeleter::pointer& r)
+    {
+        return l.Object != r.Object;
+    }
+
+    class GDIObject : private std::unique_ptr<GDIObjectDeleter::pointer, GDIObjectDeleter>
+    {
+    public:
+        void Attach(HGDIOBJ Object, bool Owns = true)
+        {
+            reset(GDIObjectDeleter::pointer(Object, Owns));
         }
 
-        virtual ~GDIObject()
+        HGDIOBJ Release()
         {
-            Delete();
-        }
-
-        void Attach(HANDLE Object, bool Owns = true)
-        {
-            Delete();
-            m_Owns = Owns;
-            m_Object = Object;
-        }
-
-        HANDLE Release()
-        {
-            HANDLE Object = m_Object;
-            m_Object = NULL;
-            m_Owns = false;
-            return Object;
+            return release().Object;
         }
 
         void Delete()
         {
-            if (IsValid())
-            {
-                if (m_Owns && IsValid())
-                    DeleteObject(m_Object);
-                m_Object = NULL;
-                m_Owns = false;
-            }
+            reset(GDIObjectDeleter::pointer());
         }
 
         bool IsValid() const
         {
-            return m_Object != NULL;
+            return GetHandle() != NULL;
         }
 
-        HANDLE GetHandle() const
+        HGDIOBJ GetHandle() const
         {
-            return m_Object;
+            return get().Object;
         }
 
         void GetObject(LPVOID Details, int Length) const
@@ -62,12 +69,6 @@ namespace rad
             if (::GetObject(GetHandle(), Length, Details) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
-
-    private:
-        GDIObject(const GDIObject&);
-
-        HANDLE  m_Object;
-        bool    m_Owns;
     };
 
     class LogBrush : public LOGBRUSH
