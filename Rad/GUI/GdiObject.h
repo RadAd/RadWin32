@@ -2,32 +2,31 @@
 #define __GDIOBJECT_H__
 
 #include <commctrl.h>
-#include <memory>
+#include "..\Win\WinHandle.h"
 #include "DevContext.H"
 
 namespace rad
 {
-    class GDIObjectDeleter
+    inline void CheckCloseGdiObject(HGDIOBJ Object)
     {
-    public:
-        typedef HGDIOBJ pointer;
-
-        void operator()(pointer Handle)
+        if (Handle != NULL)
         {
-            if (Handle != NULL)
-            {
-                if (::DeleteObject(Handle) == 0)
-                    rad::ThrowWinError();
-            }
+            if (!::DeleteObject(Object))
+                rad::ThrowWinError();
         }
-    };
+    }
 
-    class GDIObject : private std::unique_ptr<GDIObjectDeleter::pointer, GDIObjectDeleter>
+    class GDIObject : private std::unique_ptr<HGDIOBJ, WinHandleDeleter<HGDIOBJ, CheckCloseGdiObject> >
     {
     public:
+        GDIObject(HGDIOBJ Object = NULL)
+            : std::unique_ptr<HGDIOBJ, WinHandleDeleter<HGDIOBJ, CheckCloseGdiObject> >(Object)
+        {
+        }
+
         void Attach(HGDIOBJ Object)
         {
-            reset(GDIObjectDeleter::pointer(Object));
+            reset(Object);
         }
 
         HGDIOBJ Release()
@@ -37,7 +36,7 @@ namespace rad
 
         void Delete()
         {
-            reset(GDIObjectDeleter::pointer());
+            reset();
         }
 
         bool IsValid() const

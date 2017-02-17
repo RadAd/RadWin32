@@ -201,14 +201,6 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void DevContext::SelectObject(const GDIObject* GDIObj, GDIObject* OldGDIObj = nullptr);    // see "GdiObject.H"
-    /*
-        HGDIOBJ SelectObject(HGDIOBJ hGDIObj)
-        {
-            assert(IsValid());
-            return ::SelectObject(m_hDC, hGDIObj);
-        }
-    */
         void SetBkMode(int Mode)
         {
             if (::SetBkMode(GetHandle(), Mode) == 0)

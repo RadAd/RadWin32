@@ -42,6 +42,7 @@
     <ClInclude Include="Rad\Rect.h" />
     <ClInclude Include="Rad\tstring.h" />
     <ClInclude Include="Rad\WinError.h" />
+    <ClInclude Include="Rad\Win\WinHandle.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5A74A52F-2903-436A-B223-1212B11DEB75}</ProjectGuid>

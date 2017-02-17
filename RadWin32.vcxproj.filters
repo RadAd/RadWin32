@@ -58,10 +58,16 @@
     <ClInclude Include="Rad\GUI\MDIFrame.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Rad\Win\WinHandle.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">
       <UniqueIdentifier>{3670dcae-eb61-4871-b13d-94819ab77c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win">
+      <UniqueIdentifier>{fa6204f8-4023-43a4-b99d-257c0941a00e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
