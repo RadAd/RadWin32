@@ -10,43 +10,29 @@ namespace rad
     class GDIObjectDeleter
     {
     public:
-        struct pointer
-        {
-            pointer(HGDIOBJ _Object = NULL, bool _Owns = true)
-                : Object(_Object), Owns(_Owns)
-            {
-            }
-
-            HGDIOBJ Object;
-            bool Owns;
-        };
+        typedef HGDIOBJ pointer;
 
         void operator()(pointer Handle)
         {
-            if (Handle.Owns && Handle.Object != NULL)
+            if (Handle != NULL)
             {
-                if (::DeleteObject(Handle.Object) == 0)
+                if (::DeleteObject(Handle) == 0)
                     rad::ThrowWinError();
             }
         }
     };
 
-    bool operator!=(const GDIObjectDeleter::pointer&l, const GDIObjectDeleter::pointer& r)
-    {
-        return l.Object != r.Object;
-    }
-
     class GDIObject : private std::unique_ptr<GDIObjectDeleter::pointer, GDIObjectDeleter>
     {
     public:
-        void Attach(HGDIOBJ Object, bool Owns = true)
+        void Attach(HGDIOBJ Object)
         {
-            reset(GDIObjectDeleter::pointer(Object, Owns));
+            reset(GDIObjectDeleter::pointer(Object));
         }
 
         HGDIOBJ Release()
         {
-            return release().Object;
+            return release();
         }
 
         void Delete()
@@ -61,13 +47,18 @@ namespace rad
 
         HGDIOBJ GetHandle() const
         {
-            return get().Object;
+            return get();
         }
 
         void GetObject(LPVOID Details, int Length) const
         {
             if (::GetObject(GetHandle(), Length, Details) == 0)
                 ThrowWinError(_T(__FUNCTION__));
+        }
+
+        explicit operator bool() const _NOEXCEPT
+        {	// test for non-null pointer
+            return (GetHandle() != NULL);
         }
     };
 
@@ -267,26 +258,18 @@ namespace rad
         TempSelectObject(DevContext& DC, const GDIObject& _GDIObject)
             : m_DC(DC)
         {
-            m_DC.SelectObject(&_GDIObject, &m_OldGDIObject);
+            assert(m_DC.IsValid());
+            m_OldGDIObject = ::SelectObject(m_DC.GetHandle(), _GDIObject.GetHandle());
         }
         ~TempSelectObject()
         {
-            m_DC.SelectObject(&m_OldGDIObject);
+            ::SelectObject(m_DC.GetHandle(), m_OldGDIObject);
         }
 
     private:
         DevContext&     m_DC;
-        GDIObject       m_OldGDIObject;
+        HGDIOBJ         m_OldGDIObject;
     };
-
-    inline void DevContext::SelectObject(const GDIObject* GDIObj, GDIObject* OldGDIObj)
-    {
-        HANDLE  Object;
-        assert(IsValid());
-        Object = ::SelectObject(m_hDC, GDIObj->GetHandle());
-        if (OldGDIObj)
-            OldGDIObj->Attach(Object, false);
-    }
 }
 
 #endif
