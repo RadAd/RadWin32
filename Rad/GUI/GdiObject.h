@@ -9,7 +9,7 @@ namespace rad
 {
     inline void CheckCloseGdiObject(HGDIOBJ Object)
     {
-        if (Handle != NULL)
+        if (Object != NULL)
         {
             if (!::DeleteObject(Object))
                 rad::ThrowWinError();
