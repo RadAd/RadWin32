@@ -292,19 +292,19 @@ namespace rad
         WindowProxy    m_Window;
     };
 
-    class CWindowDC : public DevContext
+    class WindowDC : public DevContext
     {
     public:
-        CWindowDC()
+        WindowDC()
         {
         }
 
-        CWindowDC(WindowProxy& Window)
+        WindowDC(WindowProxy& Window)
         {
             Create(Window);
         }
 
-        ~CWindowDC()
+        ~WindowDC()
         {
             Delete();
         }
@@ -329,19 +329,19 @@ namespace rad
         WindowProxy    m_Window;
     };
 
-    class CMemDC : public DevContext
+    class MemDC : public DevContext
     {
     public:
-        CMemDC()
+        MemDC()
         {
         }
 
-        CMemDC(DevContext& OtherDevContext)
+        MemDC(DevContext& OtherDevContext)
         {
             Create(OtherDevContext);
         }
 
-        ~CMemDC()
+        ~MemDC()
         {
             Delete();
         }

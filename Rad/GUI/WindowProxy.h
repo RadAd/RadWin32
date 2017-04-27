@@ -108,6 +108,7 @@ namespace rad
 
         void DragAcceptFiles(bool Accept = true)
         {
+            assert(IsWindow());
             ::DragAcceptFiles(m_hWnd, Accept);
         }
 
@@ -137,6 +138,11 @@ namespace rad
             return ::GetClassLongPtr(m_hWnd, Index);
         }
 
+        HFONT GetFont() const
+        {
+            return (HFONT) SendMessage(WM_GETFONT);
+        }
+
         HICON GetIcon(int Type) const
         {
             return (HICON) SendMessage(WM_GETICON, Type);
@@ -144,7 +150,20 @@ namespace rad
 
         HMENU GetMenu() const
         {
+            assert(IsWindow());
             return ::GetMenu(m_hWnd);
+        }
+
+        HWND GetParent() const
+        {
+            assert(IsWindow());
+            return ::GetParent(m_hWnd);
+        }
+
+        HWND GetAncestor(UINT gaFlags) const
+        {
+            assert(IsWindow());
+            return ::GetAncestor(m_hWnd, gaFlags);
         }
 
         DWORD GetProcessId() const
@@ -219,7 +238,7 @@ namespace rad
 
         HMENU GetSystemMenu(BOOL bRevert) const
         {
-            return ::GetSystemMenu(GetHWND(), bRevert);
+            return ::GetSystemMenu(m_hWnd, bRevert);
         }
 
         WindowProxy GetWindow(int Index) const
@@ -392,6 +411,11 @@ namespace rad
         {
             assert(IsWindow());
             return ::SetForegroundWindow(m_hWnd) != 0;
+        }
+
+        void SetFont(HFONT Font, BOOL bRedraw)
+        {
+            SendMessage(WM_SETFONT, (WPARAM) Font, MAKELPARAM(bRedraw, 0));
         }
 
         HICON SetIcon(int Type, HICON Icon)

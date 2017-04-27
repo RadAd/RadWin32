@@ -2,6 +2,7 @@
 #define __WindowCREATE_H__
 
 #include "..\WinError.h"
+#include "WindowProxy.h"
 
 namespace rad
 {
@@ -15,7 +16,7 @@ namespace rad
 
         ~WindowCreate() { }
 
-        HWND Create(LPCTSTR WindowName, LPVOID data, LPCTSTR _ClassName, HWND _hParent = NULL) const
+        HWND Create(LPCTSTR WindowName, LPVOID data, LPCTSTR _ClassName, WindowProxy _Parent = WindowProxy()) const
         {
             HWND hWnd = CreateWindowEx(ExStyle,
                 _ClassName,
@@ -23,7 +24,7 @@ namespace rad
                 Style,
                 x, y,
                 Width, Height,
-                _hParent, hMenu,
+                _Parent.GetHWND(), hMenu,
                 hInstance,
                 data);
 

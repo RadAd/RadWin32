@@ -60,23 +60,23 @@ namespace rad
         return RetVal;
     }
 
-    void Dialog::CreateDlg(HINSTANCE hInstance, int Resource, HWND hParent)
+    void Dialog::CreateDlg(HINSTANCE hInstance, int Resource, WindowProxy Parent)
     {
-        CreateDialogParam(hInstance, MAKEINTRESOURCE(Resource), hParent, DlgHandlerWindowProc, (LPARAM) this);
+        CreateDialogParam(hInstance, MAKEINTRESOURCE(Resource), Parent.GetHWND(), DlgHandlerWindowProc, (LPARAM) this);
     }
 
-    INT_PTR Dialog::DoModal(HINSTANCE hInstance, LPCTSTR Template, HWND hParent)
+    INT_PTR Dialog::DoModal(HINSTANCE hInstance, LPCTSTR Template, WindowProxy Parent)
     {
         m_IsModal = true;
-        INT_PTR  ret = DialogBoxParam(hInstance, Template, hParent, DlgHandlerWindowProc, (LPARAM) this);
+        INT_PTR  ret = DialogBoxParam(hInstance, Template, Parent.GetHWND(), DlgHandlerWindowProc, (LPARAM) this);
         DetachMap();
         m_IsModal = false;
         return ret;
     }
 
-    INT_PTR Dialog::DoModal(HINSTANCE hInstance, int TemplateID, HWND hParent)
+    INT_PTR Dialog::DoModal(HINSTANCE hInstance, int TemplateID, WindowProxy Parent)
     {
-        return DoModal(hInstance, MAKEINTRESOURCE(TemplateID), hParent);
+        return DoModal(hInstance, MAKEINTRESOURCE(TemplateID), Parent.GetHWND());
     }
 
     BOOL Dialog::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)
