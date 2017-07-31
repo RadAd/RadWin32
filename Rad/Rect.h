@@ -29,7 +29,7 @@ inline POINT GetBottomRight(const RECT& Rect)
     return p;
 }
 
-POINT GetCenter(const RECT& Rect)
+inline POINT GetCenter(const RECT& Rect)
 {
     POINT	p = { (Rect.left + Rect.right) / 2, (Rect.top + Rect.bottom) / 2 };
     return p;
