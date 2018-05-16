@@ -20,6 +20,9 @@
     <ClCompile Include="Rad\GUI\MDIFrame.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Rad\GUI\CommCtrl.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rad\tstring.h" />
@@ -60,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="Rad\Win\WinHandle.h">
       <Filter>Win</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\CommCtrl.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

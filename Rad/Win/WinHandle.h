@@ -15,22 +15,11 @@ namespace rad
         }
     }
 
-    template<class H, void(*F)(H)>
-    class WinHandleDeleter
-    {
-    public:
-        typedef H pointer;
-        void operator()(H Handle)
-        {
-            F(Handle);
-        }
-    };
-
-    class WinHandle : private std::unique_ptr<HANDLE, WinHandleDeleter<HANDLE, CheckCloseHandle> >
+    class WinHandle : private std::unique_ptr<std::remove_pointer<HANDLE>::type, void (*)(HANDLE)>
     {
     public:
         WinHandle(HANDLE Handle = INVALID_HANDLE_VALUE)
-            : std::unique_ptr<HANDLE, WinHandleDeleter<HANDLE, CheckCloseHandle> >(Handle)
+            : std::unique_ptr<std::remove_pointer<HANDLE>::type, void(*)(HANDLE)>(Handle, CheckCloseHandle)
         {
         }
 

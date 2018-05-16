@@ -16,11 +16,11 @@ namespace rad
         }
     }
 
-    class GDIObject : private std::unique_ptr<HGDIOBJ, WinHandleDeleter<HGDIOBJ, CheckCloseGdiObject> >
+    class GDIObject : private std::unique_ptr<std::remove_pointer<HGDIOBJ>::type, void (*)(HGDIOBJ) >
     {
     public:
         GDIObject(HGDIOBJ Object = NULL)
-            : std::unique_ptr<HGDIOBJ, WinHandleDeleter<HGDIOBJ, CheckCloseGdiObject> >(Object)
+            : std::unique_ptr<std::remove_pointer<HGDIOBJ>::type, void(*)(HGDIOBJ) >(Object, CheckCloseGdiObject)
         {
         }
 
