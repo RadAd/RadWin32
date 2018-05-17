@@ -32,7 +32,7 @@ namespace rad
         return Atom;
     }
 
-    LPCTSTR MDIFrame::GetClassName(HINSTANCE hInstance)
+    LPCTSTR MDIFrame::GetWndClassName(HINSTANCE hInstance)
     {
         return MAKEINTATOM(GetMDIFrameAtom(hInstance));
     }

@@ -14,12 +14,12 @@ namespace rad
         static ATOM GetMDIChildAtom(HINSTANCE hInstance);
 
     public:
-        LPCTSTR GetClassName(HINSTANCE hInstance);
+        LPCTSTR GetWndClassName(HINSTANCE hInstance) override;
 
         Window* CreateChild(Window* w, LPCTSTR WindowName);
 
     protected:
-        virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct)
+        virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct) override
         {
             CLIENTCREATESTRUCT ccs = GetClientCreate();
             ::CreateWindow(_T("MDICLIENT"), (LPCTSTR) NULL,

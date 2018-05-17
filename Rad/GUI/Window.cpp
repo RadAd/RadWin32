@@ -11,7 +11,7 @@
 
 namespace rad
 {
-    const HDC DevContext::Invalid = NULL;
+    const HDC DevContextRef::Invalid = NULL;
 
     RegClass Window::GetSimpleReg(HINSTANCE hInstance)
     {
@@ -241,10 +241,7 @@ namespace rad
                 break;
 
             case WM_ERASEBKGND:
-                {
-                    DevContext dc((HDC) wParam);
-                    RetVal = OnEraseBackground(dc);
-                }
+                RetVal = OnEraseBackground((HDC) wParam);
                 break;
 
             case WM_ENTERSIZEMOVE:
@@ -473,7 +470,7 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnEraseBackground(DevContext& /*DC*/)
+    LRESULT Window::OnEraseBackground(DevContextRef /*DC*/)
     {
         return DoDefault();
     }

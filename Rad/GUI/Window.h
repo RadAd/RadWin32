@@ -5,7 +5,7 @@
 
 namespace rad
 {
-    class DevContext;
+    class DevContextRef;
     class MDIChildCreate;
     class MDIFrame;
     class PaintDC;
@@ -61,7 +61,7 @@ namespace rad
         virtual LRESULT OnContextMenu(HWND hWnd, int x, int y);
         virtual LRESULT OnDrawItem(UINT ID, LPDRAWITEMSTRUCT DrawItem);
         virtual LRESULT OnDropFiles(HDROP hDrop);
-        virtual LRESULT OnEraseBackground(DevContext& DC);
+        virtual LRESULT OnEraseBackground(DevContextRef DC);
         virtual LRESULT OnEnterSizeMove();
         virtual LRESULT OnExitSizeMove();
         virtual HICON OnGetIcon(int Type);

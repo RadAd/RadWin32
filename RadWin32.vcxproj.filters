@@ -23,6 +23,7 @@
     <ClCompile Include="Rad\GUI\CommCtrl.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Debug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rad\tstring.h" />
@@ -67,6 +68,7 @@
     <ClInclude Include="Rad\GUI\CommCtrl.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Debug.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">

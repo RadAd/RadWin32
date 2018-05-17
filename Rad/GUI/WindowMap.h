@@ -8,9 +8,7 @@
 
 namespace rad
 {
-    class DevContext;
-    class PaintDC;
-    class WindowCreate;
+    class DevContextRef;
     class WindowListener;
 
     class WindowMap : public WindowProxy

@@ -2,7 +2,6 @@
 #define __GDIOBJECT_H__
 
 #include <commctrl.h>
-#include "..\Win\WinHandle.h"
 #include "DevContext.H"
 
 namespace rad
@@ -12,31 +11,41 @@ namespace rad
         if (Object != NULL)
         {
             if (!::DeleteObject(Object))
-                rad::ThrowWinError();
+                ThrowWinError(_T(__FUNCTION__));
         }
     }
 
-    class GDIObject : private std::unique_ptr<std::remove_pointer<HGDIOBJ>::type, void (*)(HGDIOBJ) >
+    class GDIObjectRef
     {
     public:
-        GDIObject(HGDIOBJ Object = NULL)
-            : std::unique_ptr<std::remove_pointer<HGDIOBJ>::type, void(*)(HGDIOBJ) >(Object, CheckCloseGdiObject)
+        GDIObjectRef(HGDIOBJ Object = NULL)
+            : m_Object(Object)
+        {
+        }
+
+        virtual ~GDIObjectRef()
         {
         }
 
         void Attach(HGDIOBJ Object)
         {
-            reset(Object);
+            Delete();
+            m_Object = Object;
         }
 
         HGDIOBJ Release()
         {
-            return release();
+            return m_Object, m_Object = NULL;
         }
 
         void Delete()
         {
-            reset();
+            if (GetHandle() != NULL)
+            {
+                if (!::DeleteObject(GetHandle()))
+                    ThrowWinError(_T(__FUNCTION__));
+                m_Object = NULL;
+            }
         }
 
         bool IsValid() const
@@ -46,7 +55,7 @@ namespace rad
 
         HGDIOBJ GetHandle() const
         {
-            return get();
+            return m_Object;
         }
 
         void GetObject(LPVOID Details, int Length) const
@@ -59,6 +68,9 @@ namespace rad
         {	// test for non-null pointer
             return (GetHandle() != NULL);
         }
+
+    private:
+        HGDIOBJ m_Object;
     };
 
     class LogBrush : public LOGBRUSH
@@ -77,9 +89,14 @@ namespace rad
         }
     };
 
-    class Brush : public GDIObject
+    class Brush : public GDIObjectRef
     {
     public:
+        virtual ~Brush()
+        {
+            Delete();
+        }
+
         void Create(const LOGBRUSH* LogBrush)
         {
             Attach(CreateBrushIndirect(LogBrush));
@@ -97,13 +114,18 @@ namespace rad
 
         void GetObject(LOGBRUSH* Details) const
         {
-            GDIObject::GetObject((void*) Details, sizeof(LOGBRUSH));
+            GDIObjectRef::GetObject((void*) Details, sizeof(LOGBRUSH));
         }
     };
 
-    class Pen : public GDIObject
+    class Pen : public GDIObjectRef
     {
     public:
+        virtual ~Pen()
+        {
+            Delete();
+        }
+
         void Create(COLORREF Color, int Width = 0, int Style = PS_SOLID)
         {
             Attach(CreatePen(Style, Width, Color));
@@ -116,7 +138,7 @@ namespace rad
 
         void GetObject(LOGPEN* Details) const
         {
-            GDIObject::GetObject((void*) Details, sizeof(LOGPEN));
+            GDIObjectRef::GetObject((void*) Details, sizeof(LOGPEN));
         }
     };
 
@@ -154,9 +176,14 @@ namespace rad
         }
     };
 
-    class Font : public GDIObject
+    class Font : public GDIObjectRef
     {
     public:
+        virtual ~Font()
+        {
+            Delete();
+        }
+
         void Create(const LOGFONT* LogFont)
         {
             m_LogFont = LogFont;
@@ -175,17 +202,56 @@ namespace rad
 
         void GetObject(LOGFONT* Details) const
         {
-            GDIObject::GetObject((void*) Details, sizeof(LOGFONT));
+            GDIObjectRef::GetObject((void*) Details, sizeof(LOGFONT));
         }
 
     private:
         LogFont     m_LogFont;
     };
 
-    class Bitmap : public GDIObject
+    class BitmapRef : public GDIObjectRef
     {
     public:
-        void Create(DevContext& DC, int Width, int Height)
+        HBITMAP GetBitmapHandle() const
+        {
+            return (HBITMAP) GetHandle();
+        }
+
+        SIZE GetDimension() const
+        {
+            SIZE    Size;
+            if (GetBitmapDimensionEx((HBITMAP) GetHandle(), &Size) == 0)
+                ThrowWinError(_T(__FUNCTION__));
+            return Size;
+        }
+
+        void GetObject(BITMAP* Details) const
+        {
+            GDIObjectRef::GetObject((void*) Details, sizeof(BITMAP));
+        }
+
+    public: //Utils
+        SIZE GetSize() const
+        {
+            BITMAP bm;
+            GetObject(&bm);
+
+            SIZE s;
+            s.cx = bm.bmWidth;
+            s.cy = bm.bmHeight;
+            return s;
+        }
+    };
+
+    class Bitmap : public BitmapRef
+    {
+    public:
+        virtual ~Bitmap()
+        {
+            Delete();
+        }
+
+        void Create(DevContextRef DC, int Width, int Height)
         {
             Attach(CreateCompatibleBitmap(DC.GetHandle(), Width, Height));
             assert(IsValid());
@@ -197,7 +263,7 @@ namespace rad
             assert(IsValid());
         }
 
-        void CreateDIB(DevContext& DC, const BITMAPINFO* bi, void* bits, UINT usage)
+        void CreateDIB(DevContextRef DC, const BITMAPINFO* bi, void* bits, UINT usage)
         {
             Attach(CreateDIBitmap(DC.GetHandle(), &bi->bmiHeader, CBM_INIT, bits, bi, usage));
             assert(IsValid());
@@ -219,42 +285,12 @@ namespace rad
             Attach(::LoadBitmap(hInstance, Bitmap));
             assert(IsValid());
         }
-
-        HBITMAP GetBitmapHandle() const
-        {
-            return (HBITMAP) GetHandle();
-        }
-
-        SIZE GetDimension() const
-        {
-            SIZE    Size;
-            if (GetBitmapDimensionEx((HBITMAP) GetHandle(), &Size) == 0)
-                ThrowWinError(_T(__FUNCTION__));
-            return Size;
-        }
-
-        void GetObject(BITMAP* Details) const
-        {
-            GDIObject::GetObject((void*) Details, sizeof(BITMAP));
-        }
-
-    public: //Utils
-        SIZE GetSize() const
-        {
-            BITMAP bm;
-            GetObject(&bm);
-
-            SIZE s;
-            s.cx = bm.bmWidth;
-            s.cy = bm.bmHeight;
-            return s;
-        }
     };
 
     class TempSelectObject
     {
     public:
-        TempSelectObject(DevContext& DC, const GDIObject& _GDIObject)
+        TempSelectObject(DevContextRef DC, GDIObjectRef _GDIObject)
             : m_DC(DC)
         {
             assert(m_DC.IsValid());
@@ -262,12 +298,12 @@ namespace rad
         }
         ~TempSelectObject()
         {
-            ::SelectObject(m_DC.GetHandle(), m_OldGDIObject);
+            ::SelectObject(m_DC.GetHandle(), m_OldGDIObject.GetHandle());
         }
 
     private:
-        DevContext&     m_DC;
-        HGDIOBJ         m_OldGDIObject;
+        DevContextRef   m_DC;
+        GDIObjectRef    m_OldGDIObject;
     };
 }
 

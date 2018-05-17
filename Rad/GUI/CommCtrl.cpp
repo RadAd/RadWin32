@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 
+#include "..\Win\WinHandle.h"
+
 #define RT_TOOLBAR  MAKEINTRESOURCE(241)	// from "afxres.h"
 
 namespace
@@ -27,10 +29,10 @@ bool rad::ToolBarWnd::Create(const WindowProxy &Parent, DWORD Style, UINT ID, HI
     HRSRC hRsrc = ::FindResource(hInstance, MAKEINTRESOURCE(ResID), RT_TOOLBAR);
     if (hRsrc == NULL) return false;
 
-    std::unique_ptr<std::remove_pointer<HGLOBAL>::type, BOOL(__stdcall *)(HGLOBAL)> hGlb(::LoadResource(hInstance, hRsrc), FreeResource);
-    if (hGlb == NULL) return false;
+    WinHandle<HGLOBAL> hGlb(::LoadResource(hInstance, hRsrc), FreeResource);
+    if (!hGlb) return false;
 
-    SToolBarData* pTBData = (SToolBarData*) ::LockResource(hGlb.get());
+    SToolBarData* pTBData = (SToolBarData*) ::LockResource(hGlb.Get());
     if (pTBData == NULL) return false;
 
     assert(pTBData->wVersion == 1);
@@ -61,7 +63,7 @@ bool rad::ToolBarWnd::Create(const WindowProxy &Parent, DWORD Style, UINT ID, HI
     Create(Parent, Style, ID, pTBData->wItemCount, hInstance, ResID, Buttons.data(),
         pTBData->wItemCount, pTBData->wWidth, pTBData->wHeight, 0, 0);
 
-    UnlockResource(hGlb.get()); // Doesn;t do anything so it is exception safe
+    UnlockResource(hGlb.Get()); // Doesn't do anything so it is exception safe
 
     return true;
 }

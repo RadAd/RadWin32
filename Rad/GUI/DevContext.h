@@ -5,19 +5,19 @@
 
 namespace rad
 {
-    class GDIObject;        // see "GdiObject.H"
+    class GDIObjectRef;        // see "GdiObject.H"
 
-    class DevContext
+    class DevContextRef
     {
     public:
         static const HDC Invalid;
 
-        DevContext(HDC hDC = Invalid)
+        DevContextRef(HDC hDC = Invalid)
             : m_hDC(hDC)
         {
         }
 
-        virtual ~DevContext()
+        virtual ~DevContextRef()
         {
             //Delete();    // Can't do it here, can't call a virtual funtion in the destructor, must be added to derived classes
         }
@@ -59,14 +59,14 @@ namespace rad
             LineTo(Left, Top);
         }
 
-        void AlphaBlend(int XDest, int YDest, int Width, int Height, const DevContext& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, BLENDFUNCTION ftn)
+        void AlphaBlend(int XDest, int YDest, int Width, int Height, const DevContextRef& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, BLENDFUNCTION ftn)
         {
             assert(IsValid());
             if (::AlphaBlend(m_hDC, XDest, YDest, Width, Height, SrDevContext.m_hDC, XSrc, YSrc, WidthSrc, HeightSrc, ftn) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void BitBlt(int XDest, int YDest, int Width, int Height, const DevContext& SrDevContext, int XSrc, int YSrc, DWORD RasterOp)
+        void BitBlt(int XDest, int YDest, int Width, int Height, const DevContextRef& SrDevContext, int XSrc, int YSrc, DWORD RasterOp)
         {
             assert(IsValid());
             if (::BitBlt(m_hDC, XDest, YDest, Width, Height, SrDevContext.m_hDC, XSrc, YSrc, RasterOp) == 0)
@@ -80,14 +80,14 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void StretchBlt(int XDest, int YDest, int WidthDest, int HeightDest, const DevContext& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, DWORD RasterOp)
+        void StretchBlt(int XDest, int YDest, int WidthDest, int HeightDest, const DevContextRef& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, DWORD RasterOp)
         {
             assert(IsValid());
             if (::StretchBlt(m_hDC, XDest, YDest, WidthDest, HeightDest, SrDevContext.m_hDC, XSrc, YSrc, WidthSrc, HeightSrc, RasterOp) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
 
-        void TransparentBlt(int XDest, int YDest, int Width, int Height, const DevContext& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, COLORREF BgColor)
+        void TransparentBlt(int XDest, int YDest, int Width, int Height, const DevContextRef& SrDevContext, int XSrc, int YSrc, int WidthSrc, int HeightSrc, COLORREF BgColor)
         {
             assert(IsValid());
             if (::TransparentBlt(m_hDC, XDest, YDest, Width, Height, SrDevContext.m_hDC, XSrc, YSrc, WidthSrc, HeightSrc, BgColor) == 0)
@@ -248,7 +248,7 @@ namespace rad
         HDC    m_hDC;
     };
 
-    class PaintDC : public DevContext
+    class PaintDC : public DevContextRef
     {
     public:
         PaintDC()
@@ -292,7 +292,7 @@ namespace rad
         WindowProxy    m_Window;
     };
 
-    class WindowDC : public DevContext
+    class WindowDC : public DevContextRef
     {
     public:
         WindowDC()
@@ -329,14 +329,14 @@ namespace rad
         WindowProxy    m_Window;
     };
 
-    class MemDC : public DevContext
+    class MemDC : public DevContextRef
     {
     public:
         MemDC()
         {
         }
 
-        MemDC(DevContext& OtherDevContext)
+        MemDC(const DevContextRef& OtherDevContext)
         {
             Create(OtherDevContext);
         }
@@ -346,7 +346,7 @@ namespace rad
             Delete();
         }
 
-        void Create(DevContext& OtherDevContext)
+        void Create(const DevContextRef& OtherDevContext)
         {
             Attach(::CreateCompatibleDC(OtherDevContext.GetHandle()));
             if (!IsValid())

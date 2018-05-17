@@ -6,20 +6,21 @@
 
 namespace rad
 {
-    inline void CheckCloseHandle(HANDLE Handle)
+    inline BOOL __stdcall CheckCloseHandle(HANDLE Handle)
     {
         if (Handle != NULL && Handle != INVALID_HANDLE_VALUE)
         {
             if (!::CloseHandle(Handle))
-                rad::ThrowWinError();
+                ThrowWinError(_T(__FUNCTION__));
         }
     }
 
-    class WinHandle : private std::unique_ptr<std::remove_pointer<HANDLE>::type, void (*)(HANDLE)>
+    template <class T = HANDLE>
+    class WinHandle : private std::unique_ptr<typename std::remove_pointer<T>::type, BOOL(__stdcall *)(T)>
     {
     public:
-        WinHandle(HANDLE Handle = INVALID_HANDLE_VALUE)
-            : std::unique_ptr<std::remove_pointer<HANDLE>::type, void(*)(HANDLE)>(Handle, CheckCloseHandle)
+        WinHandle(T Handle = INVALID_HANDLE_VALUE, BOOL(__stdcall *func)(T) = CheckCloseHandle)
+            : std::unique_ptr<std::remove_pointer<T>::type, BOOL(__stdcall *)(T)>(Handle, func)
         {
         }
 
@@ -28,17 +29,17 @@ namespace rad
             release();
         }
 
-        HANDLE Get() const
+        T Get() const
         {
             return get();
         }
 
-        void Attach(HANDLE Handle = INVALID_HANDLE_VALUE)
+        void Attach(T Handle = INVALID_HANDLE_VALUE)
         {
             operator=(Handle);
         }
 
-        HANDLE Release()
+        T Release()
         {
             return release();
         }
