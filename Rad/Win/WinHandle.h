@@ -1,7 +1,7 @@
 #ifndef WINHANDLE_H
 #define WINHANDLE_H
 
-#include <Rad/WinError.h>
+#include "../WinError.h"
 #include <memory>
 
 namespace rad
