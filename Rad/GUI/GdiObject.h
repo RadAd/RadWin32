@@ -25,11 +25,17 @@ namespace rad
 
         virtual ~GDIObjectRef()
         {
+            Detach();
+        }
+
+        virtual void Detach()
+        {
+            m_Object = NULL;
         }
 
         void Attach(HGDIOBJ Object)
         {
-            Delete();
+            Detach();
             m_Object = Object;
         }
 
@@ -89,10 +95,33 @@ namespace rad
         }
     };
 
-    class Brush : public GDIObjectRef
+    class BrushRef : public GDIObjectRef
     {
     public:
-        virtual ~Brush()
+        using GDIObjectRef::GDIObjectRef;
+
+        HBRUSH GetBrushHandle() const
+        {
+            return (HBRUSH) GetHandle();
+        }
+
+        void GetObject(LOGBRUSH* Details) const
+        {
+            GDIObjectRef::GetObject((void*) Details, sizeof(LOGBRUSH));
+        }
+    };
+
+    class Brush : public BrushRef
+    {
+    public:
+        Brush(HBRUSH Object = NULL)
+            : BrushRef(Object)
+        {
+        }
+
+        Brush(const Brush&) = delete;
+
+        virtual void Detach() override
         {
             Delete();
         }
@@ -106,22 +135,30 @@ namespace rad
         {
             Attach(CreateSolidBrush(Color));
         }
+    };
 
-        HBRUSH GetBrushHandle() const
-        {
-            return (HBRUSH) GetHandle();
-        }
+    class PenRef : public GDIObjectRef
+    {
+    public:
+        using GDIObjectRef::GDIObjectRef;
 
-        void GetObject(LOGBRUSH* Details) const
+        void GetObject(LOGPEN* Details) const
         {
-            GDIObjectRef::GetObject((void*) Details, sizeof(LOGBRUSH));
+            GDIObjectRef::GetObject((void*) Details, sizeof(LOGPEN));
         }
     };
 
-    class Pen : public GDIObjectRef
+    class Pen : public PenRef
     {
     public:
-        virtual ~Pen()
+        Pen(HPEN Object = NULL)
+            : PenRef(Object)
+        {
+        }
+
+        Pen(const Pen&) = delete;
+
+        virtual void Detach() override
         {
             Delete();
         }
@@ -134,11 +171,6 @@ namespace rad
         HPEN GetPenHandle() const
         {
             return (HPEN) GetHandle();
-        }
-
-        void GetObject(LOGPEN* Details) const
-        {
-            GDIObjectRef::GetObject((void*) Details, sizeof(LOGPEN));
         }
     };
 
@@ -176,10 +208,33 @@ namespace rad
         }
     };
 
-    class Font : public GDIObjectRef
+    class FontRef : public GDIObjectRef
     {
     public:
-        virtual ~Font()
+        using GDIObjectRef::GDIObjectRef;
+
+        HFONT GetFontHandle() const
+        {
+            return (HFONT) GetHandle();
+        }
+
+        void GetObject(LOGFONT* Details) const
+        {
+            GDIObjectRef::GetObject((void*) Details, sizeof(LOGFONT));
+        }
+    };
+
+    class Font : public FontRef
+    {
+    public:
+        Font(HFONT Object = NULL)
+            : FontRef(Object)
+        {
+        }
+
+        Font(const Font&) = delete;
+
+        virtual void Detach() override
         {
             Delete();
         }
@@ -190,19 +245,9 @@ namespace rad
             Attach(CreateFontIndirect(LogFont));
         }
 
-        HFONT GetFontHandle() const
-        {
-            return (HFONT) GetHandle();
-        }
-
         const LOGFONT* GetLogFont() const
         {
             return &m_LogFont;
-        }
-
-        void GetObject(LOGFONT* Details) const
-        {
-            GDIObjectRef::GetObject((void*) Details, sizeof(LOGFONT));
         }
 
     private:
@@ -212,6 +257,8 @@ namespace rad
     class BitmapRef : public GDIObjectRef
     {
     public:
+        using GDIObjectRef::GDIObjectRef;
+
         HBITMAP GetBitmapHandle() const
         {
             return (HBITMAP) GetHandle();
@@ -246,7 +293,14 @@ namespace rad
     class Bitmap : public BitmapRef
     {
     public:
-        virtual ~Bitmap()
+        Bitmap(HBITMAP Object = NULL)
+            : BitmapRef(Object)
+        {
+        }
+
+        Bitmap(const Bitmap&) = delete;
+
+        virtual void Detach() override
         {
             Delete();
         }
