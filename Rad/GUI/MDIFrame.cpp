@@ -8,7 +8,7 @@ namespace rad
     RegClass MDIFrame::GetMDIFrameReg(HINSTANCE _hInstance)
     {
         RegClass rc(_hInstance, _T("MDIFRAME"), MDIFrameWndHandlerWindowProc);
-        rc.hbrBackground = (HBRUSH) (COLOR_APPWORKSPACE + 1);
+        rc.SetBackgroundColorType(COLOR_APPWORKSPACE);
         rc.style = 0;
         return rc;
     }
