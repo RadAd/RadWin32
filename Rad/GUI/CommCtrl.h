@@ -12,6 +12,8 @@ namespace rad
     class StatusWnd : public WindowProxy
     {
     public:
+        using WindowProxy::WindowProxy;
+
         void Create(const WindowProxy &Parent, DWORD Style, UINT ID, const TCHAR *Text = NULL)
         {
             Attach(
@@ -42,6 +44,8 @@ namespace rad
     class ToolBarWnd : public WindowProxy
     {
     public:
+        using WindowProxy::WindowProxy;
+
         void Create(const WindowProxy &Parent, DWORD Style, UINT ID, int Bitmaps, HINSTANCE hBMInstance, UINT BMID,
             LPCTBBUTTON Buttons, int NumButtons, int dxButton, int dyButton, int dxBitmap, int dyBitmap)
         {
@@ -117,6 +121,8 @@ namespace rad
     class ToolTipWnd : public WindowProxy
     {
     public:
+        using WindowProxy::WindowProxy;
+
         bool Create(const WindowProxy& Parent, DWORD Flags = TTS_ALWAYSTIP)
         {
             HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));
@@ -200,6 +206,8 @@ namespace rad
     class TreeViewWnd : public WindowProxy
     {
     public:
+        using WindowProxy::WindowProxy;
+
         bool Create(const WindowProxy& Parent, DWORD id, const RECT& WindowRect, DWORD Flags = TTS_ALWAYSTIP)
         {
             HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));

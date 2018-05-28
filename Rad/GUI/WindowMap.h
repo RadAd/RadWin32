@@ -14,7 +14,7 @@ namespace rad
     class WindowMap : public WindowProxy
     {
     protected:
-        WindowMap() { }
+        using WindowProxy::WindowProxy;
 
     public:
         void AddWindowListener(WindowListener* pWindowListener)

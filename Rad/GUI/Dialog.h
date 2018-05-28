@@ -8,6 +8,8 @@ namespace rad
     class Dialog : public WindowMap
     {
     public:
+        using WindowMap::WindowMap;
+
         void CreateDlg(HINSTANCE hInstance, int TemplateID, WindowProxy Parent);
 
         INT_PTR DoModal(HINSTANCE hInstance, LPCTSTR Template, WindowProxy Parent);
