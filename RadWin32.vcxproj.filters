@@ -72,6 +72,9 @@
     <ClInclude Include="Rad\Win\RadObject.h">
       <Filter>Win</Filter>
     </ClInclude>
+    <ClInclude Include="Rad\GUI\Controls.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">

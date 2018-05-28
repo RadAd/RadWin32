@@ -14,6 +14,7 @@
   <ItemGroup>
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Rad\GUI\CommCtrl.h" />
+    <ClInclude Include="Rad\GUI\Controls.h" />
     <ClInclude Include="Rad\GUI\DevContext.h" />
     <ClInclude Include="Rad\GUI\Dialog.h" />
     <ClInclude Include="Rad\GUI\GdiObject.h" />
