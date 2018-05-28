@@ -69,6 +69,9 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="Rad\Win\RadObject.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI">

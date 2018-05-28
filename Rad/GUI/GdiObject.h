@@ -3,65 +3,23 @@
 
 #include <commctrl.h>
 #include "DevContext.H"
+#include "..\Win\RadObject.h"
 
 namespace rad
 {
-    inline void CheckCloseGdiObject(HGDIOBJ Object)
-    {
-        if (Object != NULL)
-        {
-            if (!::DeleteObject(Object))
-                ThrowWinError(_T(__FUNCTION__));
-        }
-    }
-
-    class GDIObjectRef
+    class GDIObjectRef : public Object<HGDIOBJ>
     {
     public:
-        GDIObjectRef(HGDIOBJ Object = NULL)
-            : m_Object(Object)
-        {
-        }
+        using Object<HGDIOBJ>::Object;
 
-        virtual ~GDIObjectRef()
+        void Delete() override
         {
-            Detach();
-        }
-
-        virtual void Detach()
-        {
-            Release();
-        }
-
-        void Attach(HGDIOBJ Object)
-        {
-            Detach();
-            m_Object = Object;
-        }
-
-        HGDIOBJ Release()
-        {
-            return std::exchange(m_Object, HGDIOBJ(NULL));
-        }
-
-        void Delete()
-        {
-            if (GetHandle() != NULL)
+            if (IsValid())
             {
                 if (!::DeleteObject(GetHandle()))
                     ThrowWinError(_T(__FUNCTION__));
-                m_Object = NULL;
+                Release();
             }
-        }
-
-        bool IsValid() const
-        {
-            return GetHandle() != NULL;
-        }
-
-        HGDIOBJ GetHandle() const
-        {
-            return m_Object;
         }
 
         void GetObject(LPVOID Details, int Length) const
@@ -69,14 +27,6 @@ namespace rad
             if (::GetObject(GetHandle(), Length, Details) == 0)
                 ThrowWinError(_T(__FUNCTION__));
         }
-
-        explicit operator bool() const _NOEXCEPT
-        {	// test for non-null pointer
-            return (GetHandle() != NULL);
-        }
-
-    private:
-        HGDIOBJ m_Object;
     };
 
     class LogBrush : public LOGBRUSH
@@ -394,6 +344,44 @@ namespace rad
         void Create(const LOGPALETTE* LogPalette)
         {
             Attach(CreatePalette(LogPalette));
+        }
+    };
+
+    // Icon isn't actually a GDI object
+    class IconRef : public Object<HICON>
+    {
+    public:
+        using Object<HICON>::Object;
+
+        void Delete() override
+        {
+            if (!DestroyIcon(GetHandle()))
+                ThrowWinError(_T(__FUNCTION__));
+            Release();
+        }
+    };
+
+    class Icon : public Owner<IconRef>
+    {
+    public:
+        using Owner<IconRef>::Owner;
+
+        void Create(_In_opt_ HINSTANCE hInstance,
+            _In_ int nWidth,
+            _In_ int nHeight,
+            _In_ BYTE cPlanes,
+            _In_ BYTE cBitsPixel,
+            _In_ CONST BYTE *lpbANDbits,
+            _In_ CONST BYTE *lpbXORbits)
+        {
+            Attach(CreateIcon(hInstance,
+                nWidth,
+                nHeight,
+                cPlanes,
+                cBitsPixel,
+                lpbANDbits,
+                lpbXORbits));
+            assert(IsValid());
         }
     };
 }

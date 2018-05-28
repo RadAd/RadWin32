@@ -2,6 +2,7 @@
 #define __COMMCTRL_H__
 
 #include "WindowProxy.h"
+#include "..\Win\RadObject.h"
 
 #include <CommCtrl.h>
 #include <windowsx.h>
@@ -347,6 +348,53 @@ namespace rad
             return item.lParam;
         }
     };
+
+    class ImageListRef : public Object<HIMAGELIST>
+    {
+    public:
+        using Object<HIMAGELIST>::Object;
+
+        void Delete() override
+        {
+            if (!::ImageList_Destroy(GetHandle()))
+                ThrowWinError(_T(__FUNCTION__));
+            Release();
+        }
+
+    public:
+        SIZE GetIconSize() const
+        {
+            int cx, cy;
+            if (!ImageList_GetIconSize(GetHandle(), &cx, &cy))
+                ThrowWinError(_T(__FUNCTION__));
+            SIZE sz;
+            sz.cx = cx;
+            sz.cy = cy;
+            return sz;
+        }
+
+#if 0 // TODO
+        Icon GetIcon(_In_ int i, _In_ UINT flags) const
+        {
+            HICON hIcon = ImageList_GetIcon(GetHandle(), i, flags);
+            // Throw ??
+            return hIcon;
+        }
+#endif
+    };
+
+    class ImageList : public Owner<ImageListRef>
+    {
+    public:
+        using  Owner<ImageListRef>::Owner;
+
+        void Create(int cx, int cy, UINT flags, int cInitial, int cGrow)
+        {
+            Attach(ImageList_Create(cx, cy, flags, cInitial, cGrow));
+            assert(IsValid());
+        }
+    };
+
 }
 
 #endif

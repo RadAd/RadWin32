@@ -28,6 +28,7 @@
     <ClInclude Include="Rad\Rect.h" />
     <ClInclude Include="Rad\tstring.h" />
     <ClInclude Include="Rad\WinError.h" />
+    <ClInclude Include="Rad\Win\RadObject.h" />
     <ClInclude Include="Rad\Win\WinHandle.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
