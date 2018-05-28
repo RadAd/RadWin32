@@ -30,7 +30,7 @@ namespace rad
 
         virtual void Detach()
         {
-            m_Object = NULL;
+            Release();
         }
 
         void Attach(HGDIOBJ Object)
@@ -41,7 +41,7 @@ namespace rad
 
         HGDIOBJ Release()
         {
-            return m_Object, m_Object = NULL;
+            return std::exchange(m_Object, HGDIOBJ(NULL));
         }
 
         void Delete()
@@ -358,6 +358,43 @@ namespace rad
     private:
         DevContextRef   m_DC;
         GDIObjectRef    m_OldGDIObject;
+    };
+
+    class PaletteRef : public GDIObjectRef
+    {
+    public:
+        using GDIObjectRef::GDIObjectRef;
+
+        HPALETTE GetPaletteHandle() const
+        {
+            return (HPALETTE) GetHandle();
+        }
+
+        void GetObject(LOGPALETTE* Details) const
+        {
+            GDIObjectRef::GetObject((void*) Details, sizeof(LOGPALETTE));
+        }
+    };
+
+    class Palette : public PaletteRef
+    {
+    public:
+        Palette(HPALETTE Object = NULL)
+            : PaletteRef(Object)
+        {
+        }
+
+        Palette(const Palette&) = delete;
+
+        virtual void Detach() override
+        {
+            Delete();
+        }
+
+        void Create(const LOGPALETTE* LogPalette)
+        {
+            Attach(CreatePalette(LogPalette));
+        }
     };
 }
 
