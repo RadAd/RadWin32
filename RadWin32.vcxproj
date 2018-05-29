@@ -19,6 +19,7 @@
     <ClInclude Include="Rad\GUI\Dialog.h" />
     <ClInclude Include="Rad\GUI\GdiObject.h" />
     <ClInclude Include="Rad\GUI\MDIFrame.h" />
+    <ClInclude Include="Rad\GUI\Menu.h" />
     <ClInclude Include="Rad\GUI\MessageLoop.h" />
     <ClInclude Include="Rad\GUI\Window.h" />
     <ClInclude Include="Rad\GUI\WindowCreate.h" />
