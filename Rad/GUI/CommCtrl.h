@@ -9,6 +9,8 @@
 
 namespace rad
 {
+    class Icon;
+
     class StatusWnd : public WindowProxy
     {
     public:
@@ -348,8 +350,7 @@ namespace rad
             if (hItem == TVI_ROOT)
                 return 0;
 
-            TVITEM item;
-            ZeroMemory(&item, sizeof(item));
+            TVITEM item = {};
             item.hItem = hItem;
             item.mask = TVIF_PARAM;
             GetItem(&item);
@@ -381,14 +382,7 @@ namespace rad
             return sz;
         }
 
-#if 0 // TODO
-        Icon GetIcon(_In_ int i, _In_ UINT flags) const
-        {
-            HICON hIcon = ImageList_GetIcon(GetHandle(), i, flags);
-            // Throw ??
-            return hIcon;
-        }
-#endif
+        Icon GetIcon(_In_ int i, _In_ UINT flags) const;
     };
 
     class ImageList : public Owner<ImageListRef>

@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "GdiObject.h"
 #include "..\Win\WinHandle.h"
 
 #define RT_TOOLBAR  MAKEINTRESOURCE(241)	// from "afxres.h"
@@ -67,3 +68,11 @@ bool rad::ToolBarWnd::Create(const WindowProxy &Parent, DWORD Style, UINT ID, HI
 
     return true;
 }
+
+rad::Icon rad::ImageListRef::GetIcon(_In_ int i, _In_ UINT flags) const
+{
+    HICON hIcon = ImageList_GetIcon(GetHandle(), i, flags);
+    // Throw ??
+    return hIcon;
+}
+
