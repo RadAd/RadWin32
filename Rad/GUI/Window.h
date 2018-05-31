@@ -107,13 +107,13 @@ namespace rad
             }
         };
 
-        Msg SetLastMessage(Msg LastMessage)
+        static Msg SetLastMessage(Msg LastMessage)
         {
             return std::exchange(m_LastMessage, LastMessage);
         }
 
     private:
-        Msg m_LastMessage;
+        static thread_local Msg m_LastMessage;
 
     protected:
         LRESULT DoDefault()

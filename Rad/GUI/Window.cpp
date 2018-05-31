@@ -12,6 +12,7 @@
 namespace rad
 {
     const HDC DevContextRef::Invalid = NULL;
+    thread_local Window::Msg Window::m_LastMessage;
 
     RegClass Window::GetSimpleReg(HINSTANCE hInstance)
     {
@@ -56,9 +57,9 @@ namespace rad
             if (WindowHandler != nullptr)
             {
                 WindowHandler->PushWndProcDepth();
-                Msg pop = WindowHandler->SetLastMessage(Msg { DefWndProc, uMsg, wParam, lParam });
+                Msg stack = SetLastMessage(Msg { DefWndProc, uMsg, wParam, lParam });
                 RetVal = WindowHandler->OnMessage(uMsg, wParam, lParam);
-                WindowHandler->SetLastMessage(pop);
+                SetLastMessage(stack);
                 WindowHandler->PopWndProcDepth();
             }
             else
