@@ -171,11 +171,11 @@ namespace rad
                 break;
 
             case WM_MOVE:
-                RetVal = OnMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnMove(MAKEPOINTS(lParam));
                 break;
 
             case WM_MOUSEMOVE:
-                RetVal = OnMouseMove((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnMouseMove((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_MOUSELEAVE:
@@ -183,43 +183,43 @@ namespace rad
                 break;
 
             case WM_LBUTTONDOWN:
-                RetVal = OnLeftButtonDown((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnLeftButtonDown((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_LBUTTONUP:
-                RetVal = OnLeftButtonUp((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnLeftButtonUp((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_LBUTTONDBLCLK:
-                RetVal = OnLeftButtonDblClk((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnLeftButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_RBUTTONDOWN:
-                RetVal = OnRightButtonDown((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnRightButtonDown((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_RBUTTONUP:
-                RetVal = OnRightButtonUp((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnRightButtonUp((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_RBUTTONDBLCLK:
-                RetVal = OnRightButtonDblClk((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnRightButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_MBUTTONDOWN:
-                RetVal = OnMiddleButtonDown((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnMiddleButtonDown((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_MBUTTONUP:
-                RetVal = OnMiddleButtonUp((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnMiddleButtonUp((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_MBUTTONDBLCLK:
-                RetVal = OnMiddleButtonDblClk((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnMiddleButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_SYSCOMMAND:
-                RetVal = OnSysCommand((WORD) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnSysCommand((WORD) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_ACTIVATE:
@@ -231,7 +231,7 @@ namespace rad
                 break;
 
             case WM_CONTEXTMENU:
-                RetVal = OnContextMenu((HWND) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnContextMenu((HWND) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_DRAWITEM:
@@ -279,11 +279,11 @@ namespace rad
                 break;
 
             case WM_KEYDOWN:
-                RetVal = OnKeyDown((int) wParam, (KeyInfoT*) &lParam);
+                RetVal = OnKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
                 break;
 
             case WM_KEYUP:
-                RetVal = OnKeyUp((int) wParam, (KeyInfoT*) &lParam);
+                RetVal = OnKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
                 break;
 
             case WM_SETFOCUS:
@@ -291,11 +291,11 @@ namespace rad
                 break;
 
             case WM_SYSKEYDOWN:
-                RetVal = OnSysKeyDown((int) wParam, (KeyInfoT*) &lParam);
+                RetVal = OnSysKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
                 break;
 
             case WM_SYSKEYUP:
-                RetVal = OnSysKeyUp((int) wParam, (KeyInfoT*) &lParam);
+                RetVal = OnSysKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
                 break;
 
             case WM_MEASUREITEM:
@@ -343,7 +343,7 @@ namespace rad
                 break;
 
             case WM_NCMOUSEMOVE:
-                RetVal = OnNCMouseMove((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                RetVal = OnNCMouseMove((UINT) wParam, MAKEPOINTS(lParam));
                 break;
 
             case WM_NCDESTROY:
@@ -386,12 +386,12 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnMove(int /*x*/, int /*y*/)
+    LRESULT Window::OnMove(POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnMouseMove(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnMouseMove(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
@@ -401,47 +401,47 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnLeftButtonDown(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnLeftButtonDown(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnLeftButtonUp(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnLeftButtonUp(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnLeftButtonDblClk(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnLeftButtonDblClk(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnRightButtonDown(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnRightButtonDown(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnRightButtonUp(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnRightButtonUp(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnRightButtonDblClk(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnRightButtonDblClk(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnMiddleButtonDown(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnMiddleButtonDown(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnMiddleButtonUp(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnMiddleButtonUp(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnMiddleButtonDblClk(UINT /*Keys*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnMiddleButtonDblClk(UINT /*Keys*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
@@ -456,7 +456,7 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnContextMenu(HWND /*hWnd*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnContextMenu(HWND /*hWnd*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
@@ -517,12 +517,12 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnKeyDown(int /*VirtKey*/, const KeyInfoT* /*KeyInfo*/)
+    LRESULT Window::OnKeyDown(int /*VirtKey*/, KeyInfoT /*KeyInfo*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnKeyUp(int /*VirtKey*/, const KeyInfoT* /*KeyInfo*/)
+    LRESULT Window::OnKeyUp(int /*VirtKey*/, KeyInfoT /*KeyInfo*/)
     {
         return DoDefault();
     }
@@ -537,7 +537,7 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnMouseWheel(int /*Flags*/, short /*Distance*/, const POINTS& /*Point*/)
+    LRESULT Window::OnMouseWheel(int /*Flags*/, short /*Distance*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
@@ -572,17 +572,17 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnSysKeyDown(int /*VirtKey*/, const KeyInfoT* /*KeyInfo*/)
+    LRESULT Window::OnSysKeyDown(int /*VirtKey*/, KeyInfoT /*KeyInfo*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnSysKeyUp(int /*VirtKey*/, const KeyInfoT* /*KeyInfo*/)
+    LRESULT Window::OnSysKeyUp(int /*VirtKey*/, KeyInfoT /*KeyInfo*/)
     {
         return DoDefault();
     }
 
-    LRESULT Window::OnSysCommand(WORD /*ID*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnSysCommand(WORD /*ID*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
@@ -603,7 +603,7 @@ namespace rad
         return DoDefault();
     }
 
-    LRESULT Window::OnNCMouseMove(UINT /*HitTest*/, int /*x*/, int /*y*/)
+    LRESULT Window::OnNCMouseMove(UINT /*HitTest*/, POINTS /*Point*/)
     {
         return DoDefault();
     }
