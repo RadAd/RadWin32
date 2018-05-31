@@ -56,8 +56,9 @@ namespace rad
             if (WindowHandler != nullptr)
             {
                 WindowHandler->PushWndProcDepth();
-                WindowHandler->SetLastMessage(DefWndProc, uMsg, wParam, lParam);
+                Msg pop = WindowHandler->SetLastMessage(Msg { DefWndProc, uMsg, wParam, lParam });
                 RetVal = WindowHandler->OnMessage(uMsg, wParam, lParam);
+                WindowHandler->SetLastMessage(pop);
                 WindowHandler->PopWndProcDepth();
             }
             else

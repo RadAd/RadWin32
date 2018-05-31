@@ -94,29 +94,31 @@ namespace rad
         virtual LRESULT UnknownMessage(UINT Message, WPARAM wParam, LPARAM lParam);
 
     private:
-        void SetLastMessage(WNDPROC DefWndProc, UINT Message, WPARAM wParam, LPARAM lParam)
+        struct Msg
         {
-            m_DefWndProc = DefWndProc;
-            m_LastMessage = Message;
-            m_LastwParam = wParam;
-            m_LastlParam = lParam;
-        }
+            WNDPROC DefWndProc;
+            UINT Message;
+            WPARAM wParam;
+            LPARAM lParam;
 
-        LRESULT DoDefault(HWND hWnd)
+            LRESULT DoDefault(HWND hWnd)
+            {
+                return DefWndProc(hWnd, Message, wParam, lParam);
+            }
+        };
+
+        Msg SetLastMessage(Msg LastMessage)
         {
-            return m_DefWndProc(hWnd, m_LastMessage, m_LastwParam, m_LastlParam);
+            return std::exchange(m_LastMessage, LastMessage);
         }
 
     private:
-        WNDPROC m_DefWndProc;
-        UINT    m_LastMessage;
-        WPARAM  m_LastwParam;
-        LPARAM  m_LastlParam;
+        Msg m_LastMessage;
 
     protected:
         LRESULT DoDefault()
         {
-            return DoDefault(GetHWND());
+            return m_LastMessage.DoDefault(GetHWND());
         }
 
     protected:
