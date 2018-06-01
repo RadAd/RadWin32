@@ -8,13 +8,14 @@ namespace rad
 
         try
         {
-            Dialog* DlgHandler = dynamic_cast<Dialog*>(FromHWND(hWnd));
+            Dialog* DlgHandler = dynamic_cast<Dialog*>(WindowMap::GetInstance()->FromHWND(hWnd));
 
             if (uMsg == WM_INITDIALOG)
             {
                 assert(DlgHandler == NULL);
                 DlgHandler = (Dialog*) lParam;
-                DlgHandler->AttachMap(hWnd);
+                DlgHandler->Attach(hWnd);
+                WindowMap::GetInstance()->AttachMap(DlgHandler);
             }
 
             if (DlgHandler != NULL)
@@ -69,7 +70,7 @@ namespace rad
     {
         m_IsModal = true;
         INT_PTR  ret = DialogBoxParam(hInstance, Template, Parent.GetHWND(), DlgHandlerWindowProc, (LPARAM) this);
-        DetachMap();
+        WindowMap::GetInstance()->DetachMap(this);
         m_IsModal = false;
         return ret;
     }

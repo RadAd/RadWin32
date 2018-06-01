@@ -13,7 +13,7 @@ namespace rad
     class RegClass;
     class WindowCreate;
 
-    class Window : public WindowMap, private WindowMessage
+    class Window : public WindowDelete, private WindowMessage
     {
     public:
         struct KeyInfoT
@@ -30,10 +30,11 @@ namespace rad
         static RegClass GetSimpleReg(HINSTANCE hInstance);
         static ATOM GetSimpleAtom(HINSTANCE hInstance);
 
-    public:
-        using WindowMap::WindowMap;
+    protected:
+        using WindowDelete::WindowDelete;
         using WindowMessage::Add;
 
+    public:
         virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
         virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
 

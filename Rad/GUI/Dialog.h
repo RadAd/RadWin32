@@ -5,10 +5,10 @@
 
 namespace rad
 {
-    class Dialog : public WindowMap
+    class Dialog : public WindowDelete
     {
     public:
-        using WindowMap::WindowMap;
+        using WindowDelete::WindowDelete;
 
         void CreateDlg(HINSTANCE hInstance, int TemplateID, WindowProxy Parent);
 

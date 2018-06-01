@@ -8,15 +8,36 @@
 
 namespace rad
 {
-    class WindowMap : public WindowProxy
+    class WindowDelete;
+
+    class WindowMap
     {
-    protected:
+    private:
         WindowMap()
         {
         }
-        WindowMap(WindowMap&) = delete;
 
+    public:
+        static WindowMap* GetInstance();
+
+        WindowDelete* FromHWND(HWND hWnd);
+        void AttachMap(WindowDelete* Wnd);
+        void DetachMap(WindowDelete* Wnd);
+
+    private:
+        typedef std::map<HWND, WindowDelete*> HWNDMapT;
+        HWNDMapT     m_HWNDMap;
+        int          m_ExitCode;
+    };
+
+    class WindowDelete : public WindowProxy
+    {
     protected:
+        WindowDelete()
+        {
+        }
+        WindowDelete(WindowDelete&) = delete;
+
         void PushWndProcDepth()
         {
             ++m_WndProcDepth;
@@ -34,7 +55,7 @@ namespace rad
         {
             if (m_MarkForDelete)
             {
-                DetachMap();
+                WindowMap::GetInstance()->DetachMap(this);
                 delete this;
             }
         }
@@ -47,16 +68,6 @@ namespace rad
     private:
         int m_WndProcDepth = 0;
         int m_MarkForDelete = false;
-
-    protected:    // static
-        static WindowMap* FromHWND(HWND hWnd);
-        void AttachMap(HWND hWnd);
-        void DetachMap();
-
-    private:
-        typedef std::map<HWND, WindowMap*> HWNDMapT;
-        static HWNDMapT     s_HWNDMap;
-        static int          s_ExitCode;
     };
 }
 

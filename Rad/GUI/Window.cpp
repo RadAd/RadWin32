@@ -33,7 +33,7 @@ namespace rad
             //LogString("WndHandlerWindowProc: ");
             //LogMessage(hWnd, uMsg, wParam, lParam);
 
-            Window* WindowHandler = dynamic_cast<Window*>(FromHWND(hWnd));
+            Window* WindowHandler = dynamic_cast<Window*>(WindowMap::GetInstance()->FromHWND(hWnd));
 
             if (uMsg == WM_NCCREATE)
             {
@@ -47,14 +47,17 @@ namespace rad
                 else
                     WindowHandler = (Window*) cs->lpCreateParams;
                 if (WindowHandler != nullptr)
-                    WindowHandler->AttachMap(hWnd);
+                {
+                    WindowHandler->Attach(hWnd);
+                    WindowMap::GetInstance()->AttachMap(WindowHandler);
+                }
             }
 
             if (WindowHandler != nullptr)
             {
                 WindowHandler->PushWndProcDepth();
                 RetVal = WindowHandler->HandleMessage(uMsg, wParam, lParam, DefWndProc);
-                WindowHandler->PopWndProcDepth(); // TODO Need to make exception safe
+                WindowHandler->PopWndProcDepth(); // TODO Make exception safe
             }
             else
             {

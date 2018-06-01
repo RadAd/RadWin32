@@ -6,29 +6,31 @@ namespace rad
 {
     const HWND WindowProxy::Invalid = NULL;
 
-    WindowMap::HWNDMapT WindowMap::s_HWNDMap;
-    int WindowMap::s_ExitCode = 0;
-
-    WindowMap* WindowMap::FromHWND(HWND hWnd)
+    WindowMap* WindowMap::GetInstance()
     {
-        HWNDMapT::const_iterator    it = s_HWNDMap.find(hWnd);
+        static WindowMap wm;
+        return &wm;
+    }
 
-        if (it == s_HWNDMap.end())
+    WindowDelete* WindowMap::FromHWND(HWND hWnd)
+    {
+        HWNDMapT::const_iterator    it = m_HWNDMap.find(hWnd);
+
+        if (it == m_HWNDMap.end())
             return nullptr;
         else
             return it->second;
     }
 
-    void WindowMap::AttachMap(HWND hWnd)
+    void WindowMap::AttachMap(WindowDelete* Wnd)
     {
-        Attach(hWnd);
-        s_HWNDMap.insert(HWNDMapT::value_type(GetHWND(), this));
+        m_HWNDMap.insert(HWNDMapT::value_type(Wnd->GetHWND(), Wnd));
     }
 
-    void WindowMap::DetachMap()
+    void WindowMap::DetachMap(WindowDelete* Wnd)
     {
-        s_HWNDMap.erase(GetHWND());
-        if (s_HWNDMap.size() == 0)        // Last window has been destroyed
-            PostQuitMessage(s_ExitCode);
+        m_HWNDMap.erase(Wnd->GetHWND());
+        if (m_HWNDMap.size() == 0)        // Last window has been destroyed
+            PostQuitMessage(m_ExitCode);
     }
 }
