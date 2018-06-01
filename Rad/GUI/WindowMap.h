@@ -8,7 +8,6 @@
 
 namespace rad
 {
-    class DevContextRef;
     class WindowListener;
 
     class WindowMap : public WindowProxy
@@ -45,7 +44,13 @@ namespace rad
         {
             --m_WndProcDepth;
 
-            if (m_MarkForDelete && m_WndProcDepth <= 0)
+            if (m_WndProcDepth <= 0)
+                TestDelete();
+        }
+
+        void TestDelete()
+        {
+            if (m_MarkForDelete)
             {
                 DetachMap();
                 delete this;

@@ -1,7 +1,8 @@
 #ifndef __WindowHANDLER_H__
 #define __WindowHANDLER_H__
 
-#include "WindowMap.H"
+#include "WindowMap.h"
+#include "WindowMessage.h"
 
 namespace rad
 {
@@ -12,7 +13,7 @@ namespace rad
     class RegClass;
     class WindowCreate;
 
-    class Window : public WindowMap
+    class Window : public WindowMap, private WindowMessage
     {
     public:
         struct KeyInfoT
@@ -30,7 +31,7 @@ namespace rad
         static ATOM GetSimpleAtom(HINSTANCE hInstance);
 
     public:
-        using WindowMap::WindowMap;
+        using WindowMessage::WindowMessage;
 
         virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
         virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
@@ -93,32 +94,10 @@ namespace rad
         virtual LRESULT OnNCDestroy();
         virtual LRESULT UnknownMessage(UINT Message, WPARAM wParam, LPARAM lParam);
 
-    private:
-        struct Msg
-        {
-            WNDPROC DefWndProc;
-            UINT Message;
-            WPARAM wParam;
-            LPARAM lParam;
-
-            LRESULT DoDefault(HWND hWnd)
-            {
-                return DefWndProc(hWnd, Message, wParam, lParam);
-            }
-        };
-
-        static Msg SetLastMessage(Msg LastMessage)
-        {
-            return std::exchange(m_LastMessage, LastMessage);
-        }
-
-    private:
-        static thread_local Msg m_LastMessage;
-
     protected:
         LRESULT DoDefault()
         {
-            return m_LastMessage.DoDefault(GetHWND());
+            return DoChain(this);
         }
 
     protected:

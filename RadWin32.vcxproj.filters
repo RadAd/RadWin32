@@ -24,6 +24,9 @@
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Rad\GUI\WindowMessage.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rad\tstring.h" />
@@ -76,6 +79,12 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Rad\GUI\Menu.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\WindowMessage.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rad\GUI\WindowChain.h">
       <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>

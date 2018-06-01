@@ -12,7 +12,6 @@
 namespace rad
 {
     const HDC DevContextRef::Invalid = NULL;
-    thread_local Window::Msg Window::m_LastMessage;
 
     RegClass Window::GetSimpleReg(HINSTANCE hInstance)
     {
@@ -28,10 +27,8 @@ namespace rad
 
     LRESULT Window::WndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, WNDPROC DefWndProc)
     {
-        //static int depth = 0;
         LRESULT RetVal = 0;
 
-        //++depth;
         try
         {
             //LogString("WndHandlerWindowProc: ");
@@ -57,10 +54,8 @@ namespace rad
             if (WindowHandler != nullptr)
             {
                 WindowHandler->PushWndProcDepth();
-                Msg stack = SetLastMessage(Msg { DefWndProc, uMsg, wParam, lParam });
-                RetVal = WindowHandler->OnMessage(uMsg, wParam, lParam);
-                SetLastMessage(stack);
-                WindowHandler->PopWndProcDepth();
+                RetVal = WindowHandler->HandleMessage(uMsg, wParam, lParam, DefWndProc);
+                WindowHandler->PopWndProcDepth(); // TODO Need to make exception safe
             }
             else
             {
@@ -93,7 +88,6 @@ namespace rad
             ::GetWindowText(hWnd, Text, std::extent<decltype(Text)>::value);
             MessageBox(hWnd, _T("Unknown Exception. Caught in ") _T(__FUNCTION__), Text, MB_OK | MB_ICONSTOP);
         }
-        //--depth;
 
         return RetVal;
     }
