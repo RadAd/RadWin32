@@ -1,6 +1,5 @@
 #include "WindowMap.H"
 
-#include "WindowListener.h"
 //#include "..\..\Logging.H"
 
 namespace rad
@@ -31,24 +30,5 @@ namespace rad
         s_HWNDMap.erase(GetHWND());
         if (s_HWNDMap.size() == 0)        // Last window has been destroyed
             PostQuitMessage(s_ExitCode);
-    }
-
-    void WindowMap::RemoveWindowListener(WindowListener* pWindowListener)
-    {
-        WindowListenersContT::iterator it = std::find(m_WindowListeners.begin(), m_WindowListeners.end(), pWindowListener);
-        if (it != m_WindowListeners.end())
-            m_WindowListeners.erase(it);
-    }
-
-    void WindowMap::DoPreMessage(UINT Message, WPARAM wParam, LPARAM lParam)
-    {
-        for (WindowListener* pListener : m_WindowListeners)
-            pListener->OnPreMessage(this, Message, wParam, lParam);
-    }
-
-    void WindowMap::DoPostMessage(UINT Message, WPARAM wParam, LPARAM lParam)
-    {
-        for (WindowListener* pListener : m_WindowListeners)
-            pListener->OnPostMessage(this, Message, wParam, lParam);
     }
 }

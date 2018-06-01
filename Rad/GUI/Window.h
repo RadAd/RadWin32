@@ -31,7 +31,8 @@ namespace rad
         static ATOM GetSimpleAtom(HINSTANCE hInstance);
 
     public:
-        using WindowMessage::WindowMessage;
+        using WindowMap::WindowMap;
+        using WindowMessage::Add;
 
         virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
         virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);

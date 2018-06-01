@@ -8,8 +8,6 @@
 
 namespace rad
 {
-    class WindowListener;
-
     class WindowMap : public WindowProxy
     {
     protected:
@@ -17,22 +15,6 @@ namespace rad
         {
         }
         WindowMap(WindowMap&) = delete;
-
-    public:
-        void AddWindowListener(WindowListener* pWindowListener)
-        {
-            m_WindowListeners.push_back(pWindowListener);
-        }
-
-        void RemoveWindowListener(WindowListener* pWindowListener);
-
-    protected:
-        void DoPreMessage(UINT Message, WPARAM wParam, LPARAM lParam);
-        void DoPostMessage(UINT Message, WPARAM wParam, LPARAM lParam);
-
-    private:
-        typedef std::vector<WindowListener*> WindowListenersContT;
-        WindowListenersContT    m_WindowListeners;
 
     protected:
         void PushWndProcDepth()

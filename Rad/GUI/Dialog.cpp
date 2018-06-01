@@ -81,34 +81,14 @@ namespace rad
 
     BOOL Dialog::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)
     {
-        BOOL		RetVal = 0;
-
         try
         {
-            DoPreMessage(Message, wParam, lParam);
-
             switch (Message)
             {
-            case WM_INITDIALOG:
-                RetVal = OnInitDialog((HWND) wParam);
-                break;
-
-            case WM_COMMAND:
-                RetVal = OnCommand(HIWORD(wParam), LOWORD(wParam), (HWND) lParam);
-                break;
-
-            case WM_DESTROY:
-                RetVal = OnDestroy();
-                break;
-
-            default:
-                RetVal = UnknownMessage(Message, wParam, lParam);
-                break;
-            }
-
-            //if (Message != WM_NCDESTROY)    // the object is destroyed with this message
-            {
-                DoPostMessage(Message, wParam, lParam);
+            case WM_INITDIALOG: return OnInitDialog((HWND) wParam);
+            case WM_COMMAND:    return OnCommand(HIWORD(wParam), LOWORD(wParam), (HWND) lParam);
+            case WM_DESTROY:    return OnDestroy();
+            default:            return UnknownMessage(Message, wParam, lParam);
             }
         }
         catch (const WinError& e)
@@ -116,15 +96,15 @@ namespace rad
             TCHAR	Text[1024];
             GetWindowText(Text);
             MessageBox(*this, e.GetString().c_str(), Text, MB_OK | MB_ICONSTOP);
+            return 0;
         }
         catch (...)
         {
             TCHAR	Text[1024];
             GetWindowText(Text);
             MessageBox(*this, _T("Unknown Exception. Caught in ") _T(__FUNCTION__), Text, MB_OK | MB_ICONSTOP);
+            return 0;
         }
-
-        return RetVal;
     }
 
     BOOL Dialog::OnInitDialog(HWND /*FocusControl*/)

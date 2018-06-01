@@ -42,9 +42,6 @@
     <ClInclude Include="Rad\GUI\Window.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Rad\GUI\WindowListener.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Rad\WinError.h" />
     <ClInclude Include="Rad\GUI\RegClass.h">
       <Filter>GUI</Filter>

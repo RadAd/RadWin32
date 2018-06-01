@@ -6,7 +6,6 @@
 #include "MDIFrame.h"
 #include "RegClass.h"
 #include "WindowCreate.h"
-#include "WindowListener.h"
 //#include "..\..\Logging.H"
 
 namespace rad
@@ -145,213 +144,58 @@ namespace rad
 
     LRESULT Window::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)
     {
-        LRESULT        RetVal = 0;
-
         try
         {
-            DoPreMessage(Message, wParam, lParam);
-
             switch (Message)
             {
-            case WM_CREATE:
-                RetVal = OnCreate((LPCREATESTRUCT) lParam);
-                break;
-
-            case WM_PAINT:
-                {
-                    PaintDC DC(*this);
-                    RetVal = OnPaint(DC);
-                }
-                break;
-
-            case WM_MOVE:
-                RetVal = OnMove(MAKEPOINTS(lParam));
-                break;
-
-            case WM_MOUSEMOVE:
-                RetVal = OnMouseMove((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_MOUSELEAVE:
-                RetVal = OnMouseLeave();
-                break;
-
-            case WM_LBUTTONDOWN:
-                RetVal = OnLeftButtonDown((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_LBUTTONUP:
-                RetVal = OnLeftButtonUp((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_LBUTTONDBLCLK:
-                RetVal = OnLeftButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_RBUTTONDOWN:
-                RetVal = OnRightButtonDown((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_RBUTTONUP:
-                RetVal = OnRightButtonUp((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_RBUTTONDBLCLK:
-                RetVal = OnRightButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_MBUTTONDOWN:
-                RetVal = OnMiddleButtonDown((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_MBUTTONUP:
-                RetVal = OnMiddleButtonUp((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_MBUTTONDBLCLK:
-                RetVal = OnMiddleButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_SYSCOMMAND:
-                RetVal = OnSysCommand((WORD) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_ACTIVATE:
-                RetVal = OnActivate((int) wParam, (HWND) lParam);
-                break;
-
-            case WM_COMMAND:
-                RetVal = OnCommand(HIWORD(wParam), LOWORD(wParam), (HWND) lParam);
-                break;
-
-            case WM_CONTEXTMENU:
-                RetVal = OnContextMenu((HWND) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_DRAWITEM:
-                RetVal = OnDrawItem((UINT) wParam, (LPDRAWITEMSTRUCT) lParam);
-                break;
-
-            case WM_DROPFILES:
-                RetVal = OnDropFiles((HDROP) wParam);
-                break;
-
-            case WM_ERASEBKGND:
-                RetVal = OnEraseBackground((HDC) wParam);
-                break;
-
-            case WM_ENTERSIZEMOVE:
-                RetVal = (LRESULT) OnEnterSizeMove();
-                break;
-
-            case WM_EXITSIZEMOVE:
-                RetVal = (LRESULT) OnExitSizeMove();
-                break;
-
-            case WM_GETICON:
-                RetVal = (LRESULT) OnGetIcon((int) wParam);
-                break;
-
-            case WM_GETMINMAXINFO:
-                RetVal = OnGetMinMaxInfo((LPMINMAXINFO) lParam);
-                break;
-
-            case WM_HOTKEY:
-                RetVal = OnHotKey(LOWORD(lParam), HIWORD(lParam), (int) wParam);
-                break;
-
-            case WM_HSCROLL:
-                RetVal = OnHScroll((HWND) lParam, LOWORD(wParam), HIWORD(wParam));
-                break;
-
-            case WM_VSCROLL:
-                RetVal = OnVScroll((HWND) lParam, LOWORD(wParam), HIWORD(wParam));
-                break;
-
-            case WM_INITMENUPOPUP:
-                RetVal = OnInitMenuPopup((HMENU) wParam, (UINT) LOWORD(lParam), (BOOL) HIWORD(lParam));
-                break;
-
-            case WM_KEYDOWN:
-                RetVal = OnKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
-                break;
-
-            case WM_KEYUP:
-                RetVal = OnKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
-                break;
-
-            case WM_SETFOCUS:
-                RetVal = OnSetFocus((HWND) wParam);
-                break;
-
-            case WM_SYSKEYDOWN:
-                RetVal = OnSysKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
-                break;
-
-            case WM_SYSKEYUP:
-                RetVal = OnSysKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
-                break;
-
-            case WM_MEASUREITEM:
-                RetVal = OnMeasureItem((int) wParam, (LPMEASUREITEMSTRUCT) lParam);
-                break;
-
-            case WM_MENUSELECT:
-                RetVal = OnMenuSelect((UINT) LOWORD(wParam), (UINT) HIWORD(wParam), (HMENU) lParam);
-                break;
-
-            case WM_MOUSEWHEEL:
-                RetVal = OnMouseWheel((int) LOWORD(wParam), (short) HIWORD(wParam), MAKEPOINTS(lParam));
-                break;
-
-            case WM_NOTIFY:
-                RetVal = OnNotify((int) wParam, (LPNMHDR) lParam);
-                break;
-
-            case WM_SETTINGCHANGE:
-                RetVal = OnSettingChange((UINT) wParam, (LPCTSTR) lParam);
-                break;
-
-            case WM_SETCURSOR:
-                RetVal = OnSetCursor((HWND) wParam, (UINT) LOWORD(lParam), (UINT) HIWORD(lParam));
-                break;
-
-            case WM_SIZE:
-                RetVal = OnSize((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-                break;
-
-            case WM_SIZING:
-                RetVal = OnSizing((int) wParam, (LPRECT) lParam);
-                break;
-
-            case WM_TIMER:
-                RetVal = OnTimer((UINT) wParam, (TIMERPROC*) lParam);
-                break;
-
-            case WM_CLOSE:
-                RetVal = OnClose();
-                break;
-
-            case WM_DESTROY:
-                RetVal = OnDestroy();
-                break;
-
-            case WM_NCMOUSEMOVE:
-                RetVal = OnNCMouseMove((UINT) wParam, MAKEPOINTS(lParam));
-                break;
-
-            case WM_NCDESTROY:
-                RetVal = OnNCDestroy();
-                break;
-
-            default:
-                RetVal = UnknownMessage(Message, wParam, lParam);
-                break;
-            }
-
-            //if (Message != WM_NCDESTROY)    // the object is destroyed with this message
-            {
-                DoPostMessage(Message, wParam, lParam);
+            case WM_CREATE:         return OnCreate((LPCREATESTRUCT) lParam);
+            case WM_PAINT:          { PaintDC DC(*this); return OnPaint(DC); }
+            case WM_MOVE:           return OnMove(MAKEPOINTS(lParam));
+            case WM_MOUSEMOVE:      return OnMouseMove((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_MOUSELEAVE:     return OnMouseLeave();
+            case WM_LBUTTONDOWN:    return OnLeftButtonDown((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_LBUTTONUP:      return OnLeftButtonUp((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_LBUTTONDBLCLK:  return OnLeftButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_RBUTTONDOWN:    return OnRightButtonDown((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_RBUTTONUP:      return OnRightButtonUp((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_RBUTTONDBLCLK:  return OnRightButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_MBUTTONDOWN:    return OnMiddleButtonDown((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_MBUTTONUP:      return OnMiddleButtonUp((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_MBUTTONDBLCLK:  return OnMiddleButtonDblClk((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_SYSCOMMAND:     return OnSysCommand((WORD) wParam, MAKEPOINTS(lParam));
+            case WM_ACTIVATE:       return OnActivate((int) wParam, (HWND) lParam);
+            case WM_COMMAND:        return OnCommand(HIWORD(wParam), LOWORD(wParam), (HWND) lParam);
+            case WM_CONTEXTMENU:    return OnContextMenu((HWND) wParam, MAKEPOINTS(lParam));
+            case WM_DRAWITEM:       return OnDrawItem((UINT) wParam, (LPDRAWITEMSTRUCT) lParam);
+            case WM_DROPFILES:      return OnDropFiles((HDROP) wParam);
+            case WM_ERASEBKGND:     return OnEraseBackground((HDC) wParam);
+            case WM_ENTERSIZEMOVE:  return (LRESULT) OnEnterSizeMove();
+            case WM_EXITSIZEMOVE:   return (LRESULT) OnExitSizeMove();
+            case WM_GETICON:        return (LRESULT) OnGetIcon((int) wParam);
+            case WM_GETMINMAXINFO:  return OnGetMinMaxInfo((LPMINMAXINFO) lParam);
+            case WM_HOTKEY:         return OnHotKey(LOWORD(lParam), HIWORD(lParam), (int) wParam);
+            case WM_HSCROLL:        return OnHScroll((HWND) lParam, LOWORD(wParam), HIWORD(wParam));
+            case WM_VSCROLL:        return OnVScroll((HWND) lParam, LOWORD(wParam), HIWORD(wParam));
+            case WM_INITMENUPOPUP:  return OnInitMenuPopup((HMENU) wParam, (UINT) LOWORD(lParam), (BOOL) HIWORD(lParam));
+            case WM_KEYDOWN:        return OnKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
+            case WM_KEYUP:          return OnKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
+            case WM_SETFOCUS:       return OnSetFocus((HWND) wParam);
+            case WM_SYSKEYDOWN:     return OnSysKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
+            case WM_SYSKEYUP:       return OnSysKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
+            case WM_MEASUREITEM:    return OnMeasureItem((int) wParam, (LPMEASUREITEMSTRUCT) lParam);
+            case WM_MENUSELECT:     return OnMenuSelect((UINT) LOWORD(wParam), (UINT) HIWORD(wParam), (HMENU) lParam);
+            case WM_MOUSEWHEEL:     return OnMouseWheel((int) LOWORD(wParam), (short) HIWORD(wParam), MAKEPOINTS(lParam));
+            case WM_NOTIFY:         return OnNotify((int) wParam, (LPNMHDR) lParam);
+            case WM_SETTINGCHANGE:  return OnSettingChange((UINT) wParam, (LPCTSTR) lParam);
+            case WM_SETCURSOR:      return OnSetCursor((HWND) wParam, (UINT) LOWORD(lParam), (UINT) HIWORD(lParam));
+            case WM_SIZE:           return OnSize((UINT) wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+            case WM_SIZING:         return OnSizing((int) wParam, (LPRECT) lParam);
+            case WM_TIMER:          return OnTimer((UINT) wParam, (TIMERPROC*) lParam);
+            case WM_CLOSE:          return OnClose();
+            case WM_DESTROY:        return OnDestroy();
+            case WM_NCMOUSEMOVE:    return OnNCMouseMove((UINT) wParam, MAKEPOINTS(lParam));
+            case WM_NCDESTROY:      return OnNCDestroy();
+            default:                return UnknownMessage(Message, wParam, lParam);
             }
         }
         catch (const WinError& e)
@@ -359,15 +203,15 @@ namespace rad
             TCHAR    Text[1024];
             GetWindowText(Text);
             MessageBox(*this, e.GetString().c_str(), Text, MB_OK | MB_ICONSTOP);
+            return 0;
         }
         catch (...)
         {
             TCHAR    Text[1024];
             GetWindowText(Text);
             MessageBox(*this, _T("Unknown Exception. Caught in ") _T(__FUNCTION__), Text, MB_OK | MB_ICONSTOP);
+            return 0;
         }
-
-        return RetVal;
     }
 
     LRESULT Window::OnCreate(LPCREATESTRUCT /*CreateStruct*/)

@@ -25,7 +25,6 @@
     <ClInclude Include="Rad\GUI\Window.h" />
     <ClInclude Include="Rad\GUI\WindowChain.h" />
     <ClInclude Include="Rad\GUI\WindowCreate.h" />
-    <ClInclude Include="Rad\GUI\WindowListener.h" />
     <ClInclude Include="Rad\GUI\WindowMap.h" />
     <ClInclude Include="Rad\GUI\WindowMessage.h" />
     <ClInclude Include="Rad\GUI\WindowProxy.h" />

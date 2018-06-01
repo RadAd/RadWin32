@@ -16,6 +16,10 @@ namespace rad
             virtual LRESULT DoNext(Window* Window) = 0;
         };
 
+        virtual ~WindowChain()
+        {
+        }
+
         LRESULT OnMessage(Window* Window, UINT Message, WPARAM wParam, LPARAM lParam, Handle* handle)
         {
             std::swap(m_handle, handle);
