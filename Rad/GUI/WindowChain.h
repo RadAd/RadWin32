@@ -20,6 +20,7 @@ namespace rad
         {
         }
 
+        // Should this be window proxy??
         LRESULT OnMessage(Window* Window, UINT Message, WPARAM wParam, LPARAM lParam, Handle* handle)
         {
             std::swap(m_handle, handle);

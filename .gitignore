@@ -1,8 +1,8 @@
 *.VC.db
 *.VC.opendb
-Bin/*
-Int/*
+.~Bin/*
+.~Int/*
 Include/*
-Samples/*/Int/*
+Samples/*/.~Int/*
 .vs/*
 *.aps

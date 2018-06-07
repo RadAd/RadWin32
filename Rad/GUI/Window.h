@@ -38,6 +38,10 @@ namespace rad
         virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
         virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
 
+        virtual WindowCreate GetWindowCreate(HINSTANCE hInstance);
+
+        void Create(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent);
+
         void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent = NULL);
         void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
         void CreateWnd(LPCTSTR WindowName, HWND hParent);

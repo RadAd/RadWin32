@@ -109,6 +109,18 @@ namespace rad
         return MAKEINTATOM(MDIFrame::GetMDIChildAtom(hInstance));
     }
 
+    WindowCreate Window::GetWindowCreate(HINSTANCE hInstance)
+    {
+        WindowCreate wc(hInstance);
+        return wc;
+    }
+
+    void Window::Create(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent)
+    {
+        rad::WindowCreate wc(GetWindowCreate(hInstance));
+        CreateWnd(wc, WindowName, Parent.GetHWND());
+    }
+
     void Window::CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent)
     {
         LPCTSTR _ClassName = GetWndClassName(wc.hInstance);

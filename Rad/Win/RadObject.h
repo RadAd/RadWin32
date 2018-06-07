@@ -72,6 +72,14 @@ namespace rad {
         {
         }
 
+        Owner& operator=(Owner& other) = delete;
+
+        Owner& operator=(Owner&& other)
+        {
+            Attach(other.Release());
+            return *this;
+        }
+
         virtual void Detach()
         {
             Delete();

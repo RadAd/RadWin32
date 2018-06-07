@@ -240,15 +240,10 @@ namespace rad
         }
     };
 
-    class Bitmap : public BitmapRef
+    class Bitmap : public Owner<BitmapRef>
     {
     public:
-        Bitmap(HBITMAP Object = NULL)
-            : BitmapRef(Object)
-        {
-        }
-
-        Bitmap(const Bitmap&) = delete;
+        using Owner<BitmapRef>::Owner;
 
         virtual void Detach() override
         {
