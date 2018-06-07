@@ -34,17 +34,17 @@ namespace rad
         using WindowDelete::WindowDelete;
         using WindowMessage::Add;
 
-    public:
+    protected:
         virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
         virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
 
         virtual WindowCreate GetWindowCreate(HINSTANCE hInstance);
 
-        void Create(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent);
+    public:
+        void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, WindowProxy hParent);
+        void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent = NULL);
+        void CreateWnd(LPCTSTR WindowName, WindowProxy hParent);
 
-        void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent = NULL);
-        void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent = NULL);
-        void CreateWnd(LPCTSTR WindowName, HWND hParent);
         void CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient);
         void CreateMDIChildWnd(LPCTSTR WindowName, HWND hMDIClient);
         void CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f);

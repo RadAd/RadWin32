@@ -115,27 +115,21 @@ namespace rad
         return wc;
     }
 
-    void Window::Create(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent)
-    {
-        rad::WindowCreate wc(GetWindowCreate(hInstance));
-        CreateWnd(wc, WindowName, Parent.GetHWND());
-    }
-
-    void Window::CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, HWND hParent)
+    void Window::CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, WindowProxy hParent)
     {
         LPCTSTR _ClassName = GetWndClassName(wc.hInstance);
         wc.Create(WindowName, (LPVOID) this, _ClassName, hParent);
     }
 
-    void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, HWND hParent)
+    void Window::CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent)
     {
-        CreateWnd(WindowCreate(hInstance), WindowName, hParent);
+        CreateWnd(GetWindowCreate(hInstance), WindowName, Parent);
     }
 
-    void Window::CreateWnd(LPCTSTR WindowName, HWND hParent)
+    void Window::CreateWnd(LPCTSTR WindowName, WindowProxy hParent)
     {
-        assert(::IsWindow(hParent));
-        HINSTANCE hInstance = (HINSTANCE) ::GetWindowLongPtr(hParent, GWLP_HINSTANCE);
+        assert(hParent.IsWindow());
+        HINSTANCE hInstance = (HINSTANCE) hParent.GetWindowLongPtr(GWLP_HINSTANCE);
         CreateWnd(hInstance, WindowName, hParent);
     }
 
