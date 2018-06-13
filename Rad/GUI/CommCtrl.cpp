@@ -61,8 +61,13 @@ bool rad::ToolBarWnd::Create(const WindowProxy &Parent, DWORD Style, UINT ID, HI
         }
     }
 
+#if 0
     Create(Parent, Style, ID, pTBData->wItemCount, hInstance, ResID, Buttons.data(),
         pTBData->wItemCount, pTBData->wWidth, pTBData->wHeight, 0, 0);
+#else
+    Create256(Parent, Style, ID, hInstance, ResID, Buttons.data(),
+        pTBData->wItemCount, pTBData->wWidth, pTBData->wHeight);
+#endif
 
     UnlockResource(hGlb.Get()); // Doesn't do anything so it is exception safe
 

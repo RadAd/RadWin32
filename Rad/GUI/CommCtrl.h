@@ -57,7 +57,39 @@ namespace rad
             );
         }
 
+        void Create256(const WindowProxy &Parent, DWORD Style, UINT ID, HINSTANCE hBMInstance, UINT BMID,
+            LPCTBBUTTON Buttons, int NumButtons, int dxButton, int dyButton)
+        {
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/hh298381(v=vs.85).aspx
+            Attach(
+                CreateWindowEx(0, TOOLBARCLASSNAME, NULL, Style, 0, 0, 0, 0, Parent.GetHWND(), (HMENU) (INT_PTR) ID, hBMInstance, NULL)
+            );
+
+            HBITMAP hBmp = LoadBitmap(hBMInstance, MAKEINTRESOURCE(BMID));
+            COLORREF RgbMask = RGB(192, 192, 192); // TODO Get top left pixel from image
+
+            HIMAGELIST hImageList = ImageList_Create(dxButton, dyButton, ILC_COLOR32 | ILC_MASK, NumButtons, 0);
+            ImageList_AddMasked(hImageList, hBmp, RgbMask);
+
+            SetImageList(hImageList);
+
+            AddButtons(Buttons, NumButtons);
+            AutoSize();
+        }
+
         bool Create(const WindowProxy &Parent, DWORD Style, UINT ID, HINSTANCE hInstance, UINT ResID);
+
+        void AutoSize()
+        {
+            SendMessage(TB_AUTOSIZE);
+        }
+
+        void AddButtons(const TBBUTTON* Buttons, int NumButtons)
+        {
+            SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof(TBBUTTON));
+            if (SendMessage(TB_ADDBUTTONS, (WPARAM) NumButtons, (LPARAM) Buttons) == 0)
+                ThrowWinError(_T(__FUNCTION__));
+        }
 
         int GetButtonCount() const
         {
@@ -83,6 +115,11 @@ namespace rad
         HIMAGELIST GetImageList() const
         {
             return (HIMAGELIST) SendMessage(TB_GETIMAGELIST);
+        }
+
+        HIMAGELIST SetImageList(HIMAGELIST hImgList, int id = 0) const
+        {
+            return (HIMAGELIST) SendMessage(TB_SETIMAGELIST, id, (LPARAM) hImgList);
         }
 
         int CommandToIndex(UINT ID) const
