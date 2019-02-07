@@ -10,7 +10,7 @@ namespace rad
         cbSize = sizeof(WNDCLASSEX);
         lpfnWndProc = WndProc;
         hInstance = _hInstance;
-        SetCursor(IDC_ARROW);
+        hCursor = LoadCursor(NULL, IDC_ARROW);
         SetBackgroundColorType(COLOR_WINDOW);
         lpszClassName = ClassName;
         style = CS_HREDRAW | CS_VREDRAW;
