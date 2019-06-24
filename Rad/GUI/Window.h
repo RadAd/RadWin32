@@ -27,8 +27,8 @@ namespace rad
                 Transition : 1;
         };
 
-        static RegClass GetSimpleReg(HINSTANCE hInstance);
-        static ATOM GetSimpleAtom(HINSTANCE hInstance);
+        virtual RegClass GetSimpleReg(HINSTANCE hInstance);
+        ATOM GetSimpleAtom(HINSTANCE hInstance);
 
     protected:
         using WindowDelete::WindowDelete;
@@ -36,7 +36,6 @@ namespace rad
 
     protected:
         virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
-        virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
 
         virtual WindowCreate GetWindowCreate(HINSTANCE hInstance);
 
@@ -45,8 +44,7 @@ namespace rad
         void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent = NULL);
         void CreateWnd(LPCTSTR WindowName, WindowProxy hParent);
 
-        void CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, HWND hMDIClient);
-        void CreateMDIChildWnd(LPCTSTR WindowName, HWND hMDIClient);
+        void CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, MDIFrame* f);
         void CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f);
 
     protected:

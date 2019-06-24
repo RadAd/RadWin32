@@ -16,6 +16,7 @@ namespace rad
         void SetCursor(WORD res) { hCursor = LoadCursor(hInstance, MAKEINTRESOURCE(res)); }
         void SetCursor(LPCTSTR res) { hCursor = LoadCursor(hInstance, res); }
         void SetBackgroundColorType(int c) { hbrBackground = (HBRUSH) (INT_PTR) (c + 1); }
+        void SetMenu(WORD r) { lpszMenuName = MAKEINTRESOURCE(r); }
     };
 }
 

@@ -37,6 +37,11 @@ namespace rad
         return MAKEINTATOM(GetMDIFrameAtom(hInstance));
     }
 
+    LPCTSTR MDIFrame::GetMDIChildClassName(HINSTANCE hInstance)
+    {
+        return MAKEINTATOM(GetMDIChildAtom(hInstance));
+    }
+
     Window* MDIFrame::CreateChild(Window* w, LPCTSTR WindowName)
     {
 #if 0

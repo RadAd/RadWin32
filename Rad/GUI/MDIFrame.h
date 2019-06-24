@@ -8,13 +8,14 @@ namespace rad
     class MDIFrame : public Window
     {
     public:
-        static RegClass GetMDIFrameReg(HINSTANCE _hInstance);
-        static ATOM GetMDIFrameAtom(HINSTANCE hInstance);
-        static RegClass GetMDIChildReg(HINSTANCE _hInstance);
-        static ATOM GetMDIChildAtom(HINSTANCE hInstance);
+        virtual RegClass GetMDIFrameReg(HINSTANCE _hInstance);
+        ATOM GetMDIFrameAtom(HINSTANCE hInstance);
+        virtual RegClass GetMDIChildReg(HINSTANCE _hInstance);
+        ATOM GetMDIChildAtom(HINSTANCE hInstance);
 
     public:
         LPCTSTR GetWndClassName(HINSTANCE hInstance) override;
+        virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
 
         Window* CreateChild(Window* w, LPCTSTR WindowName);
 
