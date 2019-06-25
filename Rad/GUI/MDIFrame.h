@@ -20,20 +20,34 @@ namespace rad
         Window* CreateChild(Window* w, LPCTSTR WindowName);
 
     protected:
-        virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct) override
-        {
-            CLIENTCREATESTRUCT ccs = GetClientCreate();
-            ::CreateWindow(_T("MDICLIENT"), (LPCTSTR) NULL,
-                WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL,
-                0, 0, 0, 0, GetHWND(), (HMENU) 0xCAC, CreateStruct->hInstance, (LPSTR) &ccs);
-
-            return Window::OnCreate(CreateStruct);
-        }
+        virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct) override;
 
     public:
         WindowProxy GetMDIClient()
         {
             return GetMDIClient(GetHWND());
+        }
+
+        void CascadeWindows(UINT wHow = MDITILE_SKIPDISABLED | MDITILE_ZORDER)
+        {
+#if 0
+            if (::CascadeWindows(GetMDIClient().GetHWND(), wHow, nullptr, 0, nullptr) == 0)
+                ThrowWinError(_T(__FUNCTION__));
+#else
+            if (GetMDIClient().SendMessage(WM_MDICASCADE, wHow) == 0)
+                ThrowWinError(_T(__FUNCTION__));
+#endif
+        }
+
+        void TileWindows(UINT wHow = MDITILE_SKIPDISABLED /* | MDITILE_HORIZONTAL | MDITILE_VERTICAL */)
+        {
+#if 0
+            if (::TileWindows(GetMDIClient().GetHWND(), wHow, nullptr, 0, nullptr) == 0)
+                ThrowWinError(_T(__FUNCTION__));
+#else
+            if (GetMDIClient().SendMessage(WM_MDITILE, wHow) == 0)
+                ThrowWinError(_T(__FUNCTION__));
+#endif
         }
 
     private:
@@ -42,13 +56,16 @@ namespace rad
             return FindWindowEx(hFrame, NULL, _T("MDICLIENT"), nullptr);;
         }
 
-    public:
+    protected:
         virtual CLIENTCREATESTRUCT GetClientCreate()
         {
             CLIENTCREATESTRUCT ccs = {};
             // Override and fill in struct
+            ccs.hWindowMenu = FindWindowMenu();
             return ccs;
         }
+
+        virtual HMENU FindWindowMenu();
 
     protected:
         static LRESULT CALLBACK MDIFrameWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
