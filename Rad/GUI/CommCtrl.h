@@ -65,13 +65,23 @@ namespace rad
                 CreateWindowEx(0, TOOLBARCLASSNAME, NULL, Style, 0, 0, 0, 0, Parent.GetHWND(), (HMENU) (INT_PTR) ID, hBMInstance, NULL)
             );
 
-            HBITMAP hBmp = LoadBitmap(hBMInstance, MAKEINTRESOURCE(BMID));
-            COLORREF RgbMask = RGB(192, 192, 192); // TODO Get top left pixel from image
+            if (hBMInstance == HINST_COMMCTRL)
+            {
+                HIMAGELIST hImageList = ImageList_Create(dxButton, dyButton, ILC_COLOR32 | ILC_MASK, NumButtons, 0);
 
-            HIMAGELIST hImageList = ImageList_Create(dxButton, dyButton, ILC_COLOR32 | ILC_MASK, NumButtons, 0);
-            ImageList_AddMasked(hImageList, hBmp, RgbMask);
+                SetImageList(hImageList);
+                SendMessage(TB_LOADIMAGES, (WPARAM) BMID, (LPARAM) hBMInstance);
+            }
+            else
+            {
+                HBITMAP hBmp = LoadBitmap(hBMInstance, MAKEINTRESOURCE(BMID));
+                COLORREF RgbMask = RGB(192, 192, 192); // TODO Get top left pixel from image
 
-            SetImageList(hImageList);
+                HIMAGELIST hImageList = ImageList_Create(dxButton, dyButton, ILC_COLOR32 | ILC_MASK, NumButtons, 0);
+                ImageList_AddMasked(hImageList, hBmp, RgbMask);
+
+                SetImageList(hImageList);
+            }
 
             AddButtons(Buttons, NumButtons);
             AutoSize();
@@ -82,6 +92,11 @@ namespace rad
         void AutoSize()
         {
             SendMessage(TB_AUTOSIZE);
+        }
+
+        DWORD SetExtendedStyle(DWORD dwExStyle)
+        {
+            return (DWORD) SendMessage(TB_SETEXTENDEDSTYLE, 0, dwExStyle);
         }
 
         void AddButtons(const TBBUTTON* Buttons, int NumButtons)
