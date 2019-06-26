@@ -326,6 +326,11 @@ namespace rad
                 ThrowWinError(_T(__FUNCTION__));
         }
 
+        void MoveWindow(RECT r, BOOL Repaint)
+        {
+            MoveWindow(r.left, r.top, r.right - r.left, r.bottom - r.top, Repaint);
+        }
+
         void SetFocus() const
         {
             assert(IsWindow());
@@ -386,6 +391,14 @@ namespace rad
             assert(IsWindow());
             if (::SetWindowPos(m_hWnd, Next.m_hWnd, X, Y, cx, cy, uFlags) == 0)
                 ThrowWinError(_T(__FUNCTION__));
+        }
+
+        void SetWindowPos(
+            const WindowProxy& Next,
+            RECT r,
+            UINT uFlags)
+        {
+            SetWindowPos(Next, r.left, r.top, r.right - r.left, r.bottom - r.top, uFlags);
         }
 
         void SetWindowText(LPCTSTR String)

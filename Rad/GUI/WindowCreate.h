@@ -34,6 +34,19 @@ namespace rad
             return hWnd;
         }
 
+        void SetID(UINT ID)
+        {
+            hMenu = (HMENU) (INT_PTR) ID;
+        }
+
+        void SetRect(RECT r)
+        {
+            x = r.left;
+            y = r.top;
+            Width = r.right - r.left;
+            Height = r.bottom = r.top;
+        }
+
         HINSTANCE       hInstance = NULL;
         DWORD           Style = WS_OVERLAPPEDWINDOW;
         DWORD           ExStyle = 0;

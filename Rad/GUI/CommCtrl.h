@@ -2,6 +2,7 @@
 #define __COMMCTRL_H__
 
 #include "WindowProxy.h"
+#include "WindowCreate.h"
 #include "..\Win\RadObject.h"
 
 #include <CommCtrl.h>
@@ -61,9 +62,16 @@ namespace rad
             LPCTBBUTTON Buttons, int NumButtons, int dxButton, int dyButton)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh298381(v=vs.85).aspx
+#if 1
+            WindowCreate wc(NULL);
+            wc.Style = Style;
+            wc.SetID(ID);
+            Attach(wc.Create(NULL, NULL, TOOLBARCLASSNAME, Parent));
+#else
             Attach(
-                CreateWindowEx(0, TOOLBARCLASSNAME, NULL, Style, 0, 0, 0, 0, Parent.GetHWND(), (HMENU) (INT_PTR) ID, hBMInstance, NULL)
+                CreateWindowEx(0, TOOLBARCLASSNAME, NULL, Style, 0, 0, 0, 0, Parent.GetHWND(), (HMENU) (INT_PTR) ID, NULL, NULL)
             );
+#endif
 
             if (hBMInstance == HINST_COMMCTRL)
             {
@@ -179,7 +187,7 @@ namespace rad
 
         bool Create(const WindowProxy& Parent, DWORD Flags = TTS_ALWAYSTIP)
         {
-            HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));
+            HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));   // TODO Is this needed?
 
             Attach(CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL,
                 WS_POPUP | TTS_NOPREFIX | Flags,
@@ -264,7 +272,7 @@ namespace rad
 
         bool Create(const WindowProxy& Parent, DWORD id, const RECT& WindowRect, DWORD Flags = TTS_ALWAYSTIP)
         {
-            HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));
+            HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));   // TODO Is this needed?
 
             Attach(CreateWindowEx(0, WC_TREEVIEW, NULL,
                 WS_VISIBLE | WS_CHILD | WS_BORDER | Flags,
@@ -417,20 +425,21 @@ namespace rad
     public:
         using WindowProxy::WindowProxy;
 
-        bool Create(const WindowProxy& Parent, DWORD id, const RECT& WindowRect, DWORD Flags = TTS_ALWAYSTIP)
+        bool Create(const WindowProxy& Parent, DWORD ID, const RECT& WindowRect, DWORD Flags = TTS_ALWAYSTIP)
         {
-            HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));
-
+#if 1
+            WindowCreate wc(NULL);
+            wc.Style = WS_VISIBLE | WS_CHILD | Flags;
+            wc.SetID(ID);
+            wc.SetRect(WindowRect);
+            Attach(wc.Create(NULL, NULL, WC_TABCONTROL, Parent));
+#else
             Attach(CreateWindowEx(0, WC_TABCONTROL, NULL,
                 WS_VISIBLE | WS_CHILD | Flags,
                 WindowRect.left, WindowRect.top,
                 WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
-                Parent.GetHWND(), (HMENU) (UINT_PTR) id, hinstMyDll,
+                Parent.GetHWND(), (HMENU) (UINT_PTR) id, NULL,
                 NULL));
-
-#if 0
-            ::SetWindowPos(GetHWND(), HWND_TOPMOST, 0, 0, 0, 0,
-                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 #endif
 
             return IsWindow();
