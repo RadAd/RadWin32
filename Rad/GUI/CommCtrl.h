@@ -62,16 +62,10 @@ namespace rad
             LPCTBBUTTON Buttons, int NumButtons, int dxButton, int dyButton)
         {
             // https://msdn.microsoft.com/en-us/library/windows/desktop/hh298381(v=vs.85).aspx
-#if 1
             WindowCreate wc(NULL);
             wc.Style = Style;
             wc.SetID(ID);
             Attach(wc.Create(NULL, NULL, TOOLBARCLASSNAME, Parent));
-#else
-            Attach(
-                CreateWindowEx(0, TOOLBARCLASSNAME, NULL, Style, 0, 0, 0, 0, Parent.GetHWND(), (HMENU) (INT_PTR) ID, NULL, NULL)
-            );
-#endif
 
             if (hBMInstance == HINST_COMMCTRL)
             {
@@ -427,20 +421,11 @@ namespace rad
 
         bool Create(const WindowProxy& Parent, DWORD ID, const RECT& WindowRect, DWORD Flags = TTS_ALWAYSTIP)
         {
-#if 1
             WindowCreate wc(NULL);
             wc.Style = WS_VISIBLE | WS_CHILD | Flags;
             wc.SetID(ID);
             wc.SetRect(WindowRect);
             Attach(wc.Create(NULL, NULL, WC_TABCONTROL, Parent));
-#else
-            Attach(CreateWindowEx(0, WC_TABCONTROL, NULL,
-                WS_VISIBLE | WS_CHILD | Flags,
-                WindowRect.left, WindowRect.top,
-                WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
-                Parent.GetHWND(), (HMENU) (UINT_PTR) id, NULL,
-                NULL));
-#endif
 
             return IsWindow();
         }
