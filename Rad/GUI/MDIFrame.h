@@ -28,6 +28,12 @@ namespace rad
             return GetMDIClient(GetHWND());
         }
 
+        void MDIActivate(HWND hWnd)
+        {
+            if (GetMDIClient().SendMessage(WM_MDIACTIVATE, (WPARAM) hWnd) != 0)
+                ThrowWinError(_T(__FUNCTION__));
+        }
+
         void CascadeWindows(UINT wHow = MDITILE_SKIPDISABLED | MDITILE_ZORDER)
         {
 #if 0
