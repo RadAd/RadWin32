@@ -96,7 +96,7 @@ namespace rad
 
     LRESULT Window::DefWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, DefWindowProc);
+        return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, GetWindowExStyle(hWnd) & WS_EX_MDICHILD ? DefMDIChildProc : DefWindowProc);
     }
 
     LPCTSTR Window::GetWndClassName(HINSTANCE hInstance)
@@ -130,7 +130,7 @@ namespace rad
 
     void Window::CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, MDIFrame* f)
     {
-        wc.Create(f->GetMDIClient().GetHWND(), WindowName, this, f->GetMDIChildClassName(wc.hInstance));
+        wc.Create(f->GetMDIClient().GetHWND(), WindowName, this, GetWndClassName(wc.hInstance));
     }
 
     void Window::CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f)

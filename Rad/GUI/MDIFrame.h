@@ -10,12 +10,9 @@ namespace rad
     public:
         virtual RegClass GetMDIFrameReg(HINSTANCE _hInstance);
         ATOM GetMDIFrameAtom(HINSTANCE hInstance);
-        virtual RegClass GetMDIChildReg(HINSTANCE _hInstance);
-        ATOM GetMDIChildAtom(HINSTANCE hInstance);
 
     public:
         LPCTSTR GetWndClassName(HINSTANCE hInstance) override;
-        virtual LPCTSTR GetMDIChildClassName(HINSTANCE hInstance);
 
         Window* CreateChild(Window* w, LPCTSTR WindowName);
 
@@ -83,11 +80,6 @@ namespace rad
         {
             HWND hMDIClient = GetMDIClient(hWnd);
             return DefFrameProc(hWnd, hMDIClient, uMsg, wParam, lParam);
-        }
-
-        static LRESULT CALLBACK MDIChildWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-        {
-            return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, DefMDIChildProc);
         }
     };
 }
