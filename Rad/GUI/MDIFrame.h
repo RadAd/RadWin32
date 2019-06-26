@@ -19,6 +19,8 @@ namespace rad
         void CreateMDIChild(Window* w, HINSTANCE hInstance, LPCTSTR WindowName);
 
     protected:
+        ~MDIFrame() {}
+
         virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct) override;
 
     public:

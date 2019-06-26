@@ -419,7 +419,7 @@ namespace rad
     public:
         using WindowProxy::WindowProxy;
 
-        bool Create(const WindowProxy& Parent, DWORD ID, const RECT& WindowRect, DWORD Flags = TTS_ALWAYSTIP)
+        bool Create(const WindowProxy& Parent, DWORD ID, const RECT& WindowRect, DWORD Flags = TCS_SINGLELINE)
         {
             WindowCreate wc(NULL);
             wc.Style = WS_VISIBLE | WS_CHILD | Flags;

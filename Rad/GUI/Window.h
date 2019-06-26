@@ -34,6 +34,8 @@ namespace rad
         using WindowDelete::WindowDelete;
         using WindowMessage::Add;
 
+        ~Window() {}
+
     protected:
         virtual LPCTSTR GetWndClassName(HINSTANCE hInstance);
 

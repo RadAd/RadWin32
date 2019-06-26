@@ -38,6 +38,8 @@ namespace rad
         }
         WindowDelete(WindowDelete&) = delete;
 
+        ~WindowDelete() = 0 {}
+
         void PushWndProcDepth()
         {
             ++m_WndProcDepth;
