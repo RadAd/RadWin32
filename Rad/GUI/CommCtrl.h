@@ -266,15 +266,17 @@ namespace rad
         {
             HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));
 
-            Attach(CreateWindowEx(0, WC_TREEVIEW, TEXT("Tree View"),
+            Attach(CreateWindowEx(0, WC_TREEVIEW, NULL,
                 WS_VISIBLE | WS_CHILD | WS_BORDER | Flags,
                 WindowRect.left, WindowRect.top,
                 WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
                 Parent.GetHWND(), (HMENU) (UINT_PTR) id, hinstMyDll,
                 NULL));
 
+#if 0
             ::SetWindowPos(GetHWND(), HWND_TOPMOST, 0, 0, 0, 0,
                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+#endif
 
             return IsWindow();
         }
@@ -407,6 +409,96 @@ namespace rad
             item.mask = TVIF_PARAM;
             GetItem(&item);
             return item.lParam;
+        }
+    };
+
+    class TabCtrlWnd : public WindowProxy
+    {
+    public:
+        using WindowProxy::WindowProxy;
+
+        bool Create(const WindowProxy& Parent, DWORD id, const RECT& WindowRect, DWORD Flags = TTS_ALWAYSTIP)
+        {
+            HINSTANCE hinstMyDll = GetModuleHandle(TEXT("comctl32.dll"));
+
+            Attach(CreateWindowEx(0, WC_TABCONTROL, NULL,
+                WS_VISIBLE | WS_CHILD | Flags,
+                WindowRect.left, WindowRect.top,
+                WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
+                Parent.GetHWND(), (HMENU) (UINT_PTR) id, hinstMyDll,
+                NULL));
+
+#if 0
+            ::SetWindowPos(GetHWND(), HWND_TOPMOST, 0, 0, 0, 0,
+                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+#endif
+
+            return IsWindow();
+        }
+
+        void AdjustRect(RECT* r, BOOL f) const
+        {
+            TabCtrl_AdjustRect(GetHWND(), f, r);
+        }
+
+        void DeleteItem(int i)
+        {
+            if (TabCtrl_DeleteItem(GetHWND(), i) == 0)
+                ThrowWinError(_T(__FUNCTION__));
+        }
+
+        void GetItem(int i, TC_ITEM * pItem) const
+        {
+            if (!TabCtrl_GetItem(GetHWND(), i, pItem))
+                ThrowWinError(_T(__FUNCTION__));
+        }
+
+        void SetItem(int i, const TC_ITEM * pItem)
+        {
+            if (!TabCtrl_SetItem(GetHWND(), i, pItem))
+                ThrowWinError(_T(__FUNCTION__));
+        }
+
+        int GetItemCount() const
+        {
+            return TabCtrl_GetItemCount(GetHWND());
+        }
+
+        int GetCurSel() const
+        {
+            return TabCtrl_GetCurSel(GetHWND());
+        }
+
+        int SetCurSel(int i) const
+        {
+            return TabCtrl_SetCurSel(GetHWND(), i);
+        }
+
+        int InsertItem(int i, const TCITEM* item)
+        {
+            return TabCtrl_InsertItem(GetHWND(), i, item);
+        }
+
+        LPARAM GetParam(int i) const
+        {
+            TC_ITEM item = {};
+            item.mask = TCIF_PARAM;
+            GetItem(i, &item);
+            return item.lParam;
+        }
+
+        int FindParam(LPARAM lParam)
+        {
+            int count = GetItemCount();
+            for (int i = 0; i < count; ++i)
+            {
+                TC_ITEM item = {};
+                item.mask = TCIF_PARAM;
+                GetItem(i, &item);
+                if (item.lParam == lParam)
+                    return i;
+            }
+            return -1;
         }
     };
 
