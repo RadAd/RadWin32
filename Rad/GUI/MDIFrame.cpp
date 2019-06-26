@@ -27,10 +27,15 @@ namespace rad
         return MAKEINTATOM(GetMDIFrameAtom(hInstance));
     }
 
-    Window* MDIFrame::CreateChild(Window* w, LPCTSTR WindowName)
+    MDIChildCreate MDIFrame::GetMDIChildCreate(HINSTANCE hInstance)
     {
-        w->CreateMDIChildWnd(WindowName, this);
-        return w;
+        MDIChildCreate wc(hInstance);
+        return wc;
+    }
+
+    void MDIFrame::CreateMDIChild(Window* w, HINSTANCE hInstance, LPCTSTR WindowName)
+    {
+        w->CreateMDIChildWnd(hInstance, WindowName, this);
     }
 
     HMENU MDIFrame::FindWindowMenu()

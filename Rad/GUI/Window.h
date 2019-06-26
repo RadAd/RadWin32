@@ -42,10 +42,9 @@ namespace rad
     public:
         void CreateWnd(const WindowCreate& wc, LPCTSTR WindowName, WindowProxy hParent);
         void CreateWnd(HINSTANCE hInstance, LPCTSTR WindowName, WindowProxy Parent = NULL);
-        void CreateWnd(LPCTSTR WindowName, WindowProxy hParent);
 
-        void CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, MDIFrame* f);
-        void CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f);
+        void CreateMDIChildWnd(const MDIChildCreate& wc, LPCTSTR WindowName, MDIFrame* f);
+        void CreateMDIChildWnd(HINSTANCE hInstance, LPCTSTR WindowName, MDIFrame* f);
 
     protected:
         virtual LRESULT OnMessage(UINT Message, WPARAM wParam, LPARAM lParam);
@@ -83,6 +82,7 @@ namespace rad
         virtual LRESULT OnMenuSelect(UINT Item, UINT Flags, HMENU Menu);
         virtual LRESULT OnMouseWheel(int Flags, short Distance, POINTS Point);
         virtual LRESULT OnNotify(int CtrlID, LPNMHDR Header);
+        virtual LRESULT OnParentNotify(UINT uMsg, int Id, LPARAM lParam);
         virtual LRESULT OnSettingChange(UINT Flag, LPCTSTR Section);
         virtual LRESULT OnSetCursor(HWND hWnd, UINT HitTest, UINT MouseMsg);
         virtual LRESULT OnSetFocus(HWND hLostFocus);

@@ -121,23 +121,14 @@ namespace rad
         CreateWnd(GetWindowCreate(hInstance), WindowName, Parent);
     }
 
-    void Window::CreateWnd(LPCTSTR WindowName, WindowProxy hParent)
-    {
-        assert(hParent.IsWindow());
-        HINSTANCE hInstance = (HINSTANCE) hParent.GetWindowLongPtr(GWLP_HINSTANCE);
-        CreateWnd(hInstance, WindowName, hParent);
-    }
-
-    void Window::CreateMDIChildWnd(MDIChildCreate& wc, LPCTSTR WindowName, MDIFrame* f)
+    void Window::CreateMDIChildWnd(const MDIChildCreate& wc, LPCTSTR WindowName, MDIFrame* f)
     {
         wc.Create(f->GetMDIClient().GetHWND(), WindowName, this, GetWndClassName(wc.hInstance));
     }
 
-    void Window::CreateMDIChildWnd(LPCTSTR WindowName, MDIFrame* f)
+    void Window::CreateMDIChildWnd(HINSTANCE hInstance, LPCTSTR WindowName, MDIFrame* f)
     {
-        HINSTANCE hInstance = (HINSTANCE) f->GetWindowLongPtr(GWLP_HINSTANCE);
-        MDIChildCreate wc(hInstance);
-        CreateMDIChildWnd(wc, WindowName, f);
+        CreateMDIChildWnd(f->GetMDIChildCreate(hInstance), WindowName, f);
     }
 
     LRESULT Window::OnMessage(UINT Message, WPARAM wParam, LPARAM lParam)
@@ -177,6 +168,7 @@ namespace rad
             case WM_INITMENUPOPUP:  return OnInitMenuPopup((HMENU) wParam, (UINT) LOWORD(lParam), (BOOL) HIWORD(lParam));
             case WM_KEYDOWN:        return OnKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
             case WM_KEYUP:          return OnKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
+            case WM_PARENTNOTIFY:   return OnParentNotify(LOWORD(wParam), HIWORD(wParam), lParam);
             case WM_SETFOCUS:       return OnSetFocus((HWND) wParam);
             case WM_SYSKEYDOWN:     return OnSysKeyDown((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
             case WM_SYSKEYUP:       return OnSysKeyUp((int) wParam, *reinterpret_cast<KeyInfoT*>(&lParam));
@@ -379,6 +371,11 @@ namespace rad
     }
 
     LRESULT Window::OnNotify(int /*CtrlID*/, LPNMHDR /*Header*/)
+    {
+        return DoDefault();
+    }
+
+    LRESULT Window::OnParentNotify(UINT /*uMsg*/, int /*Id*/, LPARAM /*lParam*/)
     {
         return DoDefault();
     }

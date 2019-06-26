@@ -12,9 +12,11 @@ namespace rad
         ATOM GetMDIFrameAtom(HINSTANCE hInstance);
 
     public:
-        LPCTSTR GetWndClassName(HINSTANCE hInstance) override;
+        virtual LPCTSTR GetWndClassName(HINSTANCE hInstance) override;
 
-        Window* CreateChild(Window* w, LPCTSTR WindowName);
+        virtual MDIChildCreate GetMDIChildCreate(HINSTANCE hInstance);
+
+        void CreateMDIChild(Window* w, HINSTANCE hInstance, LPCTSTR WindowName);
 
     protected:
         virtual LRESULT OnCreate(LPCREATESTRUCT CreateStruct) override;
