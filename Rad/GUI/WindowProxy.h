@@ -253,6 +253,16 @@ namespace rad
             return ::GetWindowLongPtr(m_hWnd, Index);
         }
 
+        HINSTANCE GetInstance() const
+        {
+            return (HINSTANCE) GetWindowLongPtr(GWLP_HINSTANCE);
+        }
+
+        DWORD GetStyle() const
+        {
+            return (DWORD) GetWindowLongPtr(GWL_STYLE);
+        }
+
         void GetWindowPlacement(LPWINDOWPLACEMENT WindowPlacement) const
         {
             assert(IsWindow());
@@ -448,6 +458,11 @@ namespace rad
                     ThrowWinError(Error);
             }
             return LastValue;
+        }
+
+        DWORD SetStyle(DWORD dwStyle)
+        {
+            return SetWindowLong(GWL_STYLE, dwStyle);
         }
 
         bool ShowWindow(int CmdShow = SW_SHOW)
