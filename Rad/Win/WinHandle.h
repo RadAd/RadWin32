@@ -44,7 +44,7 @@ namespace rad
             return release();
         }
 
-        explicit operator bool() const _NOEXCEPT
+        explicit operator bool() const noexcept
         {   // test for non-null pointer
             return (get() != NULL && get() != INVALID_HANDLE_VALUE);
         }

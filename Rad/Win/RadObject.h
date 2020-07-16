@@ -45,7 +45,7 @@ namespace rad {
             return m_Object;
         }
 
-        explicit operator bool() const _NOEXCEPT
+        explicit operator bool() const noexcept
         {	// test for non-null pointer
             return IsValid();
         }

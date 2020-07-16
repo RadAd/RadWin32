@@ -38,7 +38,7 @@ bool rad::ToolBarWnd::Create(const WindowProxy &Parent, DWORD Style, UINT ID, HI
 
     assert(pTBData->wVersion == 1);
 
-    std::vector<TBBUTTON> Buttons(pTBData->wItemCount, {});
+    std::vector<TBBUTTON> Buttons(pTBData->wItemCount, TBBUTTON({}));
 
     int Image = 0;
     for (int I = 0; I < pTBData->wItemCount; ++I)
