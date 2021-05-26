@@ -2,6 +2,7 @@
 *.VC.opendb
 .~Bin/*
 .~Int/*
+Int/*
 Include/*
 Samples/*/.~Int/*
 .vs/*

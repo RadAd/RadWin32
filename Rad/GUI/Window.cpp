@@ -96,7 +96,7 @@ namespace rad
 
     LRESULT Window::DefWndHandlerWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, GetWindowExStyle(hWnd) & WS_EX_MDICHILD ? DefMDIChildProc : DefWindowProc);
+        return WndHandlerWindowProc(hWnd, uMsg, wParam, lParam, ((DWORD) ::GetWindowLong(hWnd, GWL_EXSTYLE)) & WS_EX_MDICHILD ? DefMDIChildProc : DefWindowProc);
     }
 
     LPCTSTR Window::GetWndClassName(HINSTANCE hInstance)

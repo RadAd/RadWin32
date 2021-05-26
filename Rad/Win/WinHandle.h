@@ -13,6 +13,7 @@ namespace rad
             if (!::CloseHandle(Handle))
                 ThrowWinError(_T(__FUNCTION__));
         }
+        return TRUE;
     }
 
     template <class T = HANDLE>
