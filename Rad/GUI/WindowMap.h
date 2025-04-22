@@ -13,9 +13,7 @@ namespace rad
     class WindowMap
     {
     private:
-        WindowMap()
-        {
-        }
+        WindowMap() = default;
 
     public:
         static WindowMap* GetInstance();
@@ -27,15 +25,13 @@ namespace rad
     private:
         typedef std::map<HWND, WindowDelete*> HWNDMapT;
         HWNDMapT     m_HWNDMap;
-        int          m_ExitCode;
+        int          m_ExitCode = 0;
     };
 
     class WindowDelete : public WindowProxy
     {
     protected:
-        WindowDelete()
-        {
-        }
+        WindowDelete() = default;
         WindowDelete(WindowDelete&) = delete;
 
         ~WindowDelete() = 0 {}

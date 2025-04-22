@@ -251,9 +251,7 @@ namespace rad
     class PaintDC : public DevContextRef
     {
     public:
-        PaintDC()
-        {
-        }
+        PaintDC() = default;
 
         PaintDC(WindowProxy& Window)
         {
@@ -288,16 +286,14 @@ namespace rad
         }
 
     private:
-        PAINTSTRUCT    m_ps;
+        PAINTSTRUCT    m_ps = {};
         WindowProxy    m_Window;
     };
 
     class WindowDC : public DevContextRef
     {
     public:
-        WindowDC()
-        {
-        }
+        WindowDC() = default;
 
         WindowDC(WindowProxy& Window)
         {
@@ -332,9 +328,7 @@ namespace rad
     class MemDC : public DevContextRef
     {
     public:
-        MemDC()
-        {
-        }
+        MemDC() = default;
 
         MemDC(const DevContextRef& OtherDevContext)
         {
